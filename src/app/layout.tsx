@@ -8,8 +8,12 @@ const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans', preload: 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', preload: false });
 
 export const metadata: Metadata = {
-  title: 'Symptora | Federated Healthcare Screening',
+  title: 'Medify | Federated Healthcare Screening',
   description: 'Symptom-first healthcare screening, records, and explainable disease likelihood workflows.',
+  icons: {
+    icon: '/medify-icon.svg',
+    shortcut: '/medify-icon.svg',
+  },
 };
 
 export default function RootLayout({

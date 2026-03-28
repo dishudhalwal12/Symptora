@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AlertCircle, HeartPulse } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
+import { BrandLockup } from "@/components/branding/BrandMark";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,13 +38,7 @@ export default function LoginPage() {
         <header className="glass-header rounded-[38px] rounded-br-[78px] p-5 md:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <Link href="/" className="flex items-center gap-3 text-[#24304d]">
-              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-                <HeartPulse className="h-5 w-5 text-[#24304d]" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-[#68779b]">Symptora</p>
-                <p className="text-base font-semibold">Welcome back</p>
-              </div>
+              <BrandLockup label="Welcome back" markClassName="h-12 w-12 rounded-[18px]" />
             </Link>
 
             <div className="bubble-card rounded-[28px] rounded-tr-[56px] px-4 py-3">
@@ -132,7 +127,7 @@ export default function LoginPage() {
               </div>
 
               <p className="mt-6 text-sm text-[#52638b]">
-                New to Symptora?{" "}
+                New to Medify?{" "}
                 <Link href="/register" className="font-semibold text-[#24304d] underline decoration-2 underline-offset-4">
                   Create an account
                 </Link>

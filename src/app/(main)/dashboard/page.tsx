@@ -149,7 +149,7 @@ export default function DashboardPage() {
     <div className="space-y-5">
       <section className="grid gap-5 xl:grid-cols-[1.12fr_0.88fr]">
         <div className="ink-panel rounded-[40px] rounded-br-[88px] p-6 md:p-7">
-          <p className="medify-pill bg-white/14 text-white">Symptora overview</p>
+          <p className="medify-pill bg-white/14 text-white">Medify overview</p>
           <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_auto]">
             <div className="max-w-2xl">
               <div className="flex flex-wrap items-center gap-3">
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                 <div className="mt-5 rounded-[24px] bg-white/12 px-4 py-4 text-sm text-white backdrop-blur-xl">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
-                    Onboarding complete. Your Symptora workspace and the symptom-led flow are ready.
+                    Onboarding complete. Your Medify workspace and the symptom-led flow are ready.
                   </div>
                 </div>
               ) : null}

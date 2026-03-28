@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AlertCircle, Shield } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { BrandMark } from "@/components/branding/BrandMark";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,17 +45,17 @@ export default function AdminLoginPage() {
         <Card className="shell-card border-0 bg-white">
           <CardHeader className="px-6 pt-8 md:px-8">
             <Link href="/" className="mb-4 flex items-center gap-3 text-gray-950">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#17181f] text-white">
-                <Shield className="h-5 w-5" />
+              <div className="rounded-2xl bg-[#17181f]/0">
+                <BrandMark className="h-11 w-11 rounded-2xl" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Symptora</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Medify</p>
                 <p className="text-base font-semibold">Admin access</p>
               </div>
             </Link>
             <CardTitle className="text-3xl">Open the control room</CardTitle>
             <CardDescription className="text-base">
-              Sign in with your Symptora account and continue if admin access is enabled.
+              Sign in with your Medify account and continue if admin access is enabled.
             </CardDescription>
           </CardHeader>
 

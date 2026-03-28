@@ -49,9 +49,7 @@ export function ResultDetailView({
         predictionLabel: result.predictionLabel,
         probability: result.probability,
         riskLevel: result.riskLevel,
-        factors: result.contributingFactors.slice(0, 3).map(
-          (factor) => `${factor.label}: ${factor.value} (${factor.direction})`
-        ),
+        factors: result.contributingFactors.slice(0, 2).map((factor) => `${factor.label}: ${factor.value}`),
         recommendation: result.recommendation,
       });
       setExplanation(payload);

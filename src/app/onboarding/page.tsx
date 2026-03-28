@@ -270,7 +270,7 @@ export default function OnboardingPage() {
         <PageIntro
           eyebrow="Onboarding"
           title="Build your baseline before you enter the workspace"
-          description="This first-run intake collects the health details Symptora needs before the main dashboard becomes useful. Your answers are saved as you move through the steps."
+          description="This first-run intake collects the health details Medify needs before the main dashboard becomes useful. Your answers are saved as you move through the steps."
         />
 
         {bootstrapWarning || profileError || saveError ? (

@@ -1,13 +1,7 @@
 import Link from "next/link";
-import {
-  Activity,
-  ArrowRight,
-  FileStack,
-  HeartPulse,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { Activity, ArrowRight, FileStack, ShieldCheck, Sparkles } from "lucide-react";
 
+import { BrandLockup } from "@/components/branding/BrandMark";
 import { Button } from "@/components/ui/button";
 
 const JOURNEY = [
@@ -55,15 +49,7 @@ export default function LandingPage() {
       <div className="mx-auto max-w-[1600px] space-y-5">
         <header className="glass-header rounded-[38px] rounded-br-[78px] p-4 md:p-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="medify-orb flex h-14 w-14 items-center justify-center rounded-[24px]">
-                <HeartPulse className="h-6 w-6 text-[#24304d]" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.32em] text-[#68779b]">Symptora</p>
-                <p className="text-xl font-semibold text-[#24304d]">Federated learning system in healthcare</p>
-              </div>
-            </div>
+            <BrandLockup label="Federated learning system in healthcare" markClassName="h-14 w-14 rounded-[24px]" />
 
             <nav className="flex flex-wrap gap-3">
               <Link href="/symptom-checker">
@@ -88,7 +74,7 @@ export default function LandingPage() {
                   One flow for disease selection, symptom capture, and likelihood review.
                 </h1>
                 <p className="mt-6 max-w-2xl text-sm leading-8 text-[#68779b] md:text-base">
-                  Symptora helps patients choose the disease concern they want to check, describe symptoms in their own words, and review the estimated chances with clear next steps.
+                  Medify helps patients choose the disease concern they want to check, describe symptoms in their own words, and review the estimated chances with clear next steps.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -143,7 +129,7 @@ export default function LandingPage() {
                 Patients, symptoms, and explainable outputs stay connected from the first screen.
               </h2>
               <p className="mt-4 max-w-xl text-sm leading-7 text-white/78">
-                Symptora keeps the first interaction simple while still producing a structured result that can guide the next clinical conversation.
+                Medify keeps the first interaction simple while still producing a structured result that can guide the next clinical conversation.
               </p>
             </div>
 
@@ -173,7 +159,7 @@ export default function LandingPage() {
                   href="/register"
                   className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#24304d] underline decoration-2 underline-offset-4"
                 >
-                  Create your Symptora account
+                  Create your Medify account
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </article>
@@ -184,7 +170,7 @@ export default function LandingPage() {
         <section className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr]">
           <div className="accent-panel rounded-[38px] rounded-tr-[78px] p-6 md:p-7">
             <p className="text-xs uppercase tracking-[0.24em] text-[#68779b]">Workspace coverage</p>
-            <h2 className="mt-4 text-3xl font-semibold text-[#24304d]">Move from early screening into deeper review without leaving Symptora.</h2>
+            <h2 className="mt-4 text-3xl font-semibold text-[#24304d]">Move from early screening into deeper review without leaving Medify.</h2>
             <p className="mt-4 text-sm leading-7 text-[#52638b]">
               Start with patient-reported symptoms, then continue into assessments, records, saved histories, and explainable next actions.
             </p>

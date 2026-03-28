@@ -14,6 +14,7 @@ import {
   UserRound,
 } from "lucide-react";
 
+import { BrandMark } from "@/components/branding/BrandMark";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
@@ -44,11 +45,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <header className="glass-header rounded-[38px] rounded-br-[78px] p-5 md:p-6">
           <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr] xl:items-center">
             <div className="flex items-start gap-4">
-              <div className="medify-orb flex h-16 w-16 shrink-0 items-center justify-center rounded-[26px]">
-                <HeartPulse className="h-7 w-7 text-[#24304d]" />
-              </div>
+              <BrandMark className="h-16 w-16 shrink-0 rounded-[26px]" />
               <div>
-                <p className="text-xs uppercase tracking-[0.32em] text-[#68779b]">Symptora</p>
+                <p className="text-xs uppercase tracking-[0.32em] text-[#68779b]">Medify</p>
                 <h1 className="mt-2 text-3xl font-semibold text-[#24304d] md:text-4xl">
                   Federated healthcare screening
                 </h1>
@@ -75,9 +74,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 </Link>
                 {user ? (
                   <div className="bubble-card flex items-center gap-3 rounded-[28px] px-4 py-3">
-                    <div className="medify-orb flex h-11 w-11 items-center justify-center rounded-[18px]">
-                      <UserRound className="h-5 w-5 text-[#24304d]" />
-                    </div>
+                    <BrandMark className="h-11 w-11 rounded-[18px]" />
                     <div>
                       <p className="text-sm font-semibold text-[#24304d]">{user.fullName}</p>
                       <p className="text-xs uppercase tracking-[0.18em] text-[#68779b]">{user.role}</p>

@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="medifyBg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(76 64) rotate(49.7) scale(224.698)">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="0.28" stop-color="#EAF2FF"/>
+      <stop offset="0.68" stop-color="#B5D3FF"/>
+      <stop offset="1" stop-color="#7AA7EA"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="72" fill="url(#medifyBg)"/>
+  <rect x="34" y="34" width="188" height="188" rx="56" fill="#FFFFFF" fill-opacity="0.42" stroke="white" stroke-opacity="0.78" stroke-width="4"/>
+  <rect x="116" y="70" width="24" height="116" rx="12" fill="#1F3E74"/>
+  <rect x="70" y="116" width="116" height="24" rx="12" fill="#1F3E74"/>
+  <circle cx="182" cy="74" r="18" fill="#FF935F"/>
+  <circle cx="182" cy="74" r="30" fill="white" fill-opacity="0.55"/>
+</svg>

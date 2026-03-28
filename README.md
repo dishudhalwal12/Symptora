@@ -1,6 +1,6 @@
-# Symptora
+# Medify
 
-Symptora is a production-style academic healthcare web app built with Next.js, Firebase, Python, and local machine learning models for:
+Medify is a production-style academic healthcare web app built with Next.js, Firebase, Python, and local machine learning models for:
 
 - diabetes
 - heart disease
@@ -129,17 +129,17 @@ If that command does not work:
 - Click `Open Folder`
 - Select the `medify` folder
 
-**5. Optional: Create `.env.local` Only If You Want Custom Keys**
+**5. Environment Setup Is Already Handled**
 
-You do **not** need `.env.local` for the core localhost demo.
+For the normal localhost setup, you do **not** need to create `.env.local`.
 
 The repo already contains:
 - public Firebase web configuration for the existing project
 - internal API routes for assessments
 - local upload handling
-- local fallback summaries when Gemini is not configured
+- local defaults for the main app flow
 
-Only create `.env.local` if you want to override the built-in defaults or use your own Gemini key.
+Only create `.env.local` if you want to override the built-in defaults or add your own private Gemini key.
 
 If you want that optional file, run:
 
@@ -158,7 +158,8 @@ SYMPTORA_PYTHON_BIN=python
 Important note:
 - The app now uses internal ML routes by default, so local assessment flows can still work even if you are not manually running a separate FastAPI server
 - For local report uploads, the app uses its own local upload route and does not require paid Firebase Storage
-- Assessment explanations are local by default, so they do not consume Gemini quota
+- The core app flow works without extra env setup
+- Gemini-powered explanations require a valid `GEMINI_API_KEY` only if you want that feature active on the cloned machine
 
 **6. Install Frontend Dependencies**
 
@@ -287,9 +288,8 @@ Then:
 
 ```powershell
 cd $HOME\Desktop
-git clone <YOUR_GITHUB_REPO_URL>
-cd Symptora
-Copy-Item .env.example .env.local
+git clone https://github.com/dishudhalwal12/medify.git
+cd medify
 npm install
 py -m pip install -r ml-api/requirements.txt
 py ml-api/scripts/train_all.py
@@ -342,8 +342,8 @@ py ml-api/scripts/train_all.py
 - Local uploads are handled by the app itself, so Firebase paid Storage is not required for local demo use
 
 **Error: Firebase auth/profile/history does not load**
-- Check `.env.local`
-- Make sure Firebase project values are correct
+- Restart `npm run dev`
+- If you created a custom `.env.local`, check those values
 - Make sure Firestore is enabled in the Firebase project
 
 **13. What Is Real Right Now**
@@ -394,9 +394,8 @@ For a fresh client laptop:
 
 1. Install Git, Node.js LTS, Python, and VS Code if missing
 2. Clone or download the repo
-3. Create `.env.local`
-4. Run `npm install`
-5. Run `py -m pip install -r ml-api/requirements.txt`
-6. Run `py ml-api/scripts/train_all.py`
-7. Run `npm run dev`
-8. Open `http://localhost:3000`
+3. Run `npm install`
+4. Run `py -m pip install -r ml-api/requirements.txt`
+5. Run `py ml-api/scripts/train_all.py`
+6. Run `npm run dev`
+7. Open `http://localhost:3000`

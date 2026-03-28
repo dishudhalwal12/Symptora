@@ -41,7 +41,7 @@ export default function AdminDashboardPage() {
     <div>
       <PageIntro
         eyebrow="Admin"
-        title="Symptora control room"
+        title="Medify control room"
         description="Monitor users, model usage, uploads, and integration health from one operational dashboard."
       />
 

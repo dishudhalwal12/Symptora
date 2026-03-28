@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { HeartPulse, MailCheck } from "lucide-react";
+import { MailCheck } from "lucide-react";
 
+import { BrandLockup } from "@/components/branding/BrandMark";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,17 +38,11 @@ export default function ForgotPasswordPage() {
       <Card className="shell-card w-full max-w-xl border-0 bg-white">
         <CardHeader className="px-6 pt-8 md:px-8">
           <Link href="/" className="mb-4 flex items-center gap-3 text-gray-950">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#17181f] text-white">
-              <HeartPulse className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Symptora</p>
-              <p className="text-base font-semibold">Reset password</p>
-            </div>
+            <BrandLockup label="Reset password" markClassName="h-11 w-11 rounded-2xl" brandClassName="text-gray-400" labelClassName="text-base font-semibold text-gray-950" />
           </Link>
           <CardTitle className="text-3xl">Recover your access</CardTitle>
           <CardDescription className="text-base">
-            Send a password reset email to recover access to your Symptora account.
+            Send a password reset email to recover access to your Medify account.
           </CardDescription>
         </CardHeader>
 
@@ -57,7 +52,7 @@ export default function ForgotPasswordPage() {
               <MailCheck className="h-10 w-10 text-emerald-700" />
               <h2 className="mt-4 text-2xl font-semibold text-gray-950">Reset email sent</h2>
               <p className="mt-3 text-sm leading-7 text-gray-600">
-                If an account exists for <span className="font-semibold text-gray-950">{email}</span>, Symptora has sent a password reset link. Return to sign in after updating your password.
+                If an account exists for <span className="font-semibold text-gray-950">{email}</span>, Medify has sent a password reset link. Return to sign in after updating your password.
               </p>
               <Link href="/login" className="mt-5 inline-flex text-sm font-semibold text-gray-950">
                 Back to sign in

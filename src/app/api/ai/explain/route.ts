@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { buildAssessmentExplanation } from "@/lib/assessment-explainer";
+import { explainAssessmentWithGemini } from "@/services/gemini.server";
 
 export async function POST(request: Request) {
   try {
@@ -14,11 +14,12 @@ export async function POST(request: Request) {
       recommendation: string;
     };
 
-    const result = buildAssessmentExplanation({
+    const result = await explainAssessmentWithGemini({
+      assessmentId: payload.assessmentId,
       assessmentType: payload.assessmentType,
       predictionLabel: payload.predictionLabel,
       probability: payload.probability,
-      riskLevel: payload.riskLevel as "Low" | "Moderate" | "High",
+      riskLevel: payload.riskLevel,
       factors: payload.factors,
       recommendation: payload.recommendation,
     });

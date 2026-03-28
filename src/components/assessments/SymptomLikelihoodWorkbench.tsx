@@ -145,7 +145,7 @@ export function SymptomLikelihoodWorkbench() {
               </div>
             </div>
             <p className="mt-4 text-sm leading-7 text-[#52638b]">
-              Free-text notes help Symptora match wording like chest pressure, fatigue, or appetite loss when estimating the chance.
+              Free-text notes help Medify match wording like chest pressure, fatigue, or appetite loss when estimating the chance.
             </p>
             <Textarea
               className="mt-4"
@@ -239,7 +239,7 @@ export function SymptomLikelihoodWorkbench() {
 
           {result.noteMatches.length > 0 ? (
             <div className="mt-5 rounded-[22px] bg-white/72 px-4 py-4 text-sm leading-7 text-[#52638b]">
-              Symptora also found symptom cues inside the free-text notes and merged them into the estimate.
+              Medify also found symptom cues inside the free-text notes and merged them into the estimate.
             </div>
           ) : null}
         </div>

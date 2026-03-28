@@ -113,7 +113,13 @@ function parseTaggedExplanationPayload(text: string): MedicalExplanationResult |
   };
 }
 
-async function runJsonPrompt(prompt: string): Promise<MedicalExplanationResult> {
+async function runJsonPrompt(
+  prompt: string,
+  options?: {
+    maxOutputTokens?: number;
+    temperature?: number;
+  }
+): Promise<MedicalExplanationResult> {
   const client = getGeminiClient();
 
   if (!client) {
@@ -131,8 +137,8 @@ async function runJsonPrompt(prompt: string): Promise<MedicalExplanationResult> 
       const model = client.getGenerativeModel({
         model: modelName,
         generationConfig: {
-          maxOutputTokens: 220,
-          temperature: 0.75,
+          maxOutputTokens: options?.maxOutputTokens ?? 220,
+          temperature: options?.temperature ?? 0.75,
         },
       });
       const result = await model.generateContent(prompt);
@@ -181,6 +187,25 @@ async function runJsonPrompt(prompt: string): Promise<MedicalExplanationResult> 
   };
 }
 
+function sanitizeInlineText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function compactFactorList(factors: string[]) {
+  const items = factors
+    .map((factor) => sanitizeInlineText(factor))
+    .filter(Boolean)
+    .slice(0, 2);
+
+  return items.length > 0 ? items.join("; ") : "No standout factors were provided";
+}
+
+function compactRecommendation(recommendation: string) {
+  const clean = sanitizeInlineText(recommendation);
+  const firstSentence = clean.split(/(?<=[.!?])\s+/)[0] || clean;
+  return firstSentence.slice(0, 140);
+}
+
 export async function explainAssessmentWithGemini(payload: {
   assessmentId?: string;
   assessmentType: string;
@@ -190,44 +215,50 @@ export async function explainAssessmentWithGemini(payload: {
   factors: string[];
   recommendation: string;
 }) {
-  return runJsonPrompt(`
-Write a warm, natural explanation for a patient in plain everyday English.
-Do not sound like a doctor, a robot, or a legal disclaimer.
-Do not diagnose and do not prescribe medicine.
-Use a human tone: supportive, direct, and emotionally aware.
+  const probabilityPercent = Math.round(payload.probability * 100);
+  const compactFactors = compactFactorList(payload.factors);
+  const followUp = compactRecommendation(payload.recommendation);
 
-Tone rules:
-- If risk is High: be clear and serious without panicking the patient.
-- If risk is Moderate: be balanced and practical.
-- If risk is Low: be reassuring and gentle.
-- Mention seeing a doctor promptly when the result is risky.
-- Make it sound like a real person typed it.
-- Avoid phrases like "our analysis indicates" or "pattern detected" unless necessary.
+  return runJsonPrompt(
+    `
+Return valid JSON only with exactly these keys:
+{"explanation":"string","nextSteps":["string","string"]}
 
-Output rules:
-- Do not return JSON.
-- Return exactly this format:
-EXPLANATION: <one short paragraph>
-NEXT_STEPS:
-- <step 1>
-- <step 2>
-- <step 3>
-- explanation: 70 to 110 words, one short paragraph.
-- next steps: exactly 3 short strings.
+Write like a calm, caring human talking directly to the patient.
+Use simple everyday English.
+Do not sound like a doctor, chatbot, report, or disclaimer.
+Do not mention AI, models, training data, or "our analysis".
+Do not diagnose. Do not prescribe treatment.
+
+Tone:
+- High risk: serious, steady, supportive, and clear that a doctor should be consulted soon.
+- Moderate risk: practical and balanced.
+- Low risk: reassuring but not dismissive.
+
+Limits:
+- Explanation must be one paragraph of 55 to 80 words.
+- Mention at most two standout factors naturally.
+- Next steps must be exactly 2 short strings.
+- Each next step must stay under 12 words.
 
 Case:
-- Assessment: ${payload.assessmentType}
-- Result label: ${payload.predictionLabel}
-- Probability: ${(payload.probability * 100).toFixed(1)}%
-- Risk level: ${payload.riskLevel}
-- Key factors: ${payload.factors.join("; ")}
-- Suggested follow-up: ${payload.recommendation}
-  `.trim());
+- Assessment: ${sanitizeInlineText(payload.assessmentType)}
+- Result label: ${sanitizeInlineText(payload.predictionLabel)}
+- Risk level: ${sanitizeInlineText(payload.riskLevel)}
+- Estimated chance: ${probabilityPercent}%
+- Standout factors: ${compactFactors}
+- Follow-up note: ${followUp}
+    `.trim(),
+    {
+      maxOutputTokens: 150,
+      temperature: 0.6,
+    }
+  );
 }
 
 export async function summarizeRecordWithGemini(payload: RecordSummaryPayload) {
   return runJsonPrompt(`
-You are summarizing uploaded medical record text for a healthcare support application called Symptora.
+You are summarizing uploaded medical record text for a healthcare support application called Medify.
 You must not diagnose or invent findings.
 Return valid JSON with keys: explanation, nextSteps.
 

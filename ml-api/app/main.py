@@ -7,9 +7,9 @@ from routes.predict import router as predict_router
 
 
 app = FastAPI(
-    title="Symptora ML API",
+    title="Medify ML API",
     version="1.0.0",
-    description="Inference and model health service for Symptora tabular and X-ray assessments.",
+    description="Inference and model health service for Medify tabular and X-ray assessments.",
 )
 
 app.add_middleware(

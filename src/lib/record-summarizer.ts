@@ -27,7 +27,7 @@ export function buildRecordSummary(payload: RecordSummaryPayload): MedicalExplan
     nextSteps: [
       "Read the original report alongside this summary so no important detail is missed.",
       "If any wording is unclear, ask your doctor or clinic to explain the result directly.",
-      "Keep the file saved in Symptora so it stays linked to future assessments.",
+      "Keep the file saved in Medify so it stays linked to future assessments.",
     ],
   };
 }

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AlertCircle, CheckCircle2, HeartPulse, LoaderCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 
+import { BrandLockup } from "@/components/branding/BrandMark";
 import { useAuth } from "@/hooks/useAuth";
 import { authService } from "@/services/auth.service";
 import { Button } from "@/components/ui/button";
@@ -60,7 +61,7 @@ export default function RegisterPage() {
     setError(null);
 
     try {
-      await authService.retryBootstrap(fullName.trim() || "Symptora User");
+      await authService.retryBootstrap(fullName.trim() || "Medify User");
       setStage("success");
       router.replace("/onboarding?welcome=1");
     } catch (err) {
@@ -75,13 +76,7 @@ export default function RegisterPage() {
         <header className="glass-header rounded-[38px] rounded-br-[78px] p-5 md:p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <Link href="/" className="flex items-center gap-3 text-[#24304d]">
-              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-                <HeartPulse className="h-5 w-5 text-[#24304d]" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-[#68779b]">Symptora</p>
-                <p className="text-base font-semibold">Create your account</p>
-              </div>
+              <BrandLockup label="Create your account" markClassName="h-12 w-12 rounded-[18px]" />
             </Link>
 
             <div className="bubble-card rounded-[28px] rounded-tr-[56px] px-4 py-3">
@@ -95,7 +90,7 @@ export default function RegisterPage() {
         <div className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
           <Card className="order-2 overflow-hidden p-1 xl:order-1">
             <CardHeader className="px-6 pt-8 md:px-8">
-              <CardTitle className="text-4xl">Open the Symptora workspace</CardTitle>
+              <CardTitle className="text-4xl">Open the Medify workspace</CardTitle>
               <CardDescription className="text-base text-[#52638b]">
                 Create the account first, then continue into onboarding so the baseline health data is ready before the dashboard opens.
               </CardDescription>
@@ -208,7 +203,7 @@ export default function RegisterPage() {
                 <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Step 1</p>
                 <p className="mt-3 text-2xl font-semibold text-[#24304d]">Create the account</p>
                 <p className="mt-3 text-sm leading-7 text-[#52638b]">
-                  Your account is created first, then Symptora prepares the matching workspace profile.
+                  Your account is created first, then Medify prepares the matching workspace profile.
                 </p>
               </section>
 

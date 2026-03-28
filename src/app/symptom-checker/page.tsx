@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, HeartPulse, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
+import { BrandLockup } from "@/components/branding/BrandMark";
 import { SymptomLikelihoodWorkbench } from "@/components/assessments/SymptomLikelihoodWorkbench";
 import { Button } from "@/components/ui/button";
 
@@ -17,13 +18,7 @@ export default function SymptomCheckerPage() {
         <header className="glass-header rounded-[38px] rounded-br-[78px] p-4 md:p-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-                <HeartPulse className="h-5 w-5 text-[#24304d]" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.32em] text-[#68779b]">Symptora</p>
-                <p className="text-lg font-semibold text-[#24304d]">Symptom likelihood explorer</p>
-              </div>
+              <BrandLockup label="Symptom likelihood explorer" markClassName="h-12 w-12 rounded-[18px]" labelClassName="text-lg font-semibold text-[#24304d]" />
             </Link>
 
             <div className="flex flex-wrap gap-3">
@@ -48,7 +43,7 @@ export default function SymptomCheckerPage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/register">
-                <Button size="lg">Use Symptora in full</Button>
+                <Button size="lg">Use Medify in full</Button>
               </Link>
               <Link href="/">
                 <Button size="lg" variant="outline">
@@ -88,7 +83,7 @@ export default function SymptomCheckerPage() {
               <div className="clay-card rounded-[34px] rounded-bl-[70px] p-6">
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#68779b]">Workspace ready</p>
                 <p className="mt-4 text-sm leading-7 text-[#52638b]">
-                  Continue inside Symptora to save the screening, add records, and carry the case into deeper assessments.
+                  Continue inside Medify to save the screening, add records, and carry the case into deeper assessments.
                 </p>
               </div>
             </div>
@@ -104,7 +99,7 @@ export default function SymptomCheckerPage() {
               <h2 className="mt-2 text-3xl font-semibold text-[#24304d]">Save the screening flow inside the full healthcare workspace</h2>
             </div>
             <Link href="/register" className="inline-flex items-center gap-2 text-sm font-semibold text-[#24304d] underline decoration-2 underline-offset-4">
-              Create your Symptora account
+              Create your Medify account
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
