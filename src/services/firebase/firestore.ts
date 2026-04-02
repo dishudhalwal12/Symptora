@@ -21,7 +21,7 @@ import { normalizeFirebaseError } from "@/services/firebase/errors";
 
 function assertDb() {
   if (!db) {
-    throw new Error("Firebase Firestore is not configured. Add the required NEXT_PUBLIC_FIREBASE_* env vars.");
+    throw new Error("Firebase Firestore is not configured. Add the required NEXT_PUBLIC_FIREBASE_* values to .env.local.");
   }
 
   return db;

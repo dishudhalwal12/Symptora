@@ -137,28 +137,44 @@ The repo already contains:
 - public Firebase web configuration for the existing project
 - internal API routes for assessments
 - local upload handling
-- local defaults for the main app flow
+- one local secrets file: `.env.local`
 
-Only create `.env.local` if you want to override the built-in defaults or add your own private Gemini key.
+Create `.env.local` on the laptop that will run the app. This is the only file that should stay private and should not be pushed to GitHub.
 
-If you want that optional file, run:
+Start from:
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
-Useful optional overrides:
+Then paste the real values into `.env.local`.
+
+Required values for the app to work properly:
 
 ```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_value
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_value
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_value
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_value
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_value
+NEXT_PUBLIC_FIREBASE_APP_ID=your_value
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_value
+```
+
+Optional values:
+
+```env
+NEXT_PUBLIC_ML_API_BASE_URL=
+NEXT_PUBLIC_GEMINI_ENABLED=false
 GEMINI_API_KEY=your_key_here
 GEMINI_MODEL=gemini-2.5-flash
 SYMPTORA_PYTHON_BIN=python
 ```
 
 Important note:
+- `.env.local` is the one private file you should copy manually to the client laptop after cloning
 - The app now uses internal ML routes by default, so local assessment flows can still work even if you are not manually running a separate FastAPI server
 - For local report uploads, the app uses its own local upload route and does not require paid Firebase Storage
-- The core app flow works without extra env setup
 - Gemini-powered explanations require a valid `GEMINI_API_KEY` only if you want that feature active on the cloned machine
 
 **6. Install Frontend Dependencies**
