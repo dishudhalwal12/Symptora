@@ -7,8 +7,10 @@ import { ActivitySquare, Sparkles } from "lucide-react";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { StatusPill } from "@/components/ui/status-pill";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessments, getDemoInsight, getDisplayProfile } from "@/lib/demo-data";
 import { buildInsightSummary } from "@/lib/scoring";
 import { getAssessmentService, getInsightsService } from "@/services/loaders";
 import { AssessmentRecord, InsightSummary } from "@/types";
@@ -20,9 +22,10 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user || !profile) return;
+    if (!user) return;
     const userId = user.uid;
-    const currentProfile = profile;
+    const currentProfile = getDisplayProfile(user, profile);
+    const demoSeed = { uid: userId, fullName: currentProfile?.fullName || user.fullName };
 
     let cancelled = false;
 
@@ -45,13 +48,14 @@ export default function InsightsPage() {
 
         if (cancelled) return;
 
-        setHistory(records);
-        setSummary(insight);
+        const shouldUseDemo = records.length === 0;
+        setHistory(records.length > 0 ? records : getDemoAssessments(demoSeed));
+        setSummary(shouldUseDemo ? getDemoInsight(demoSeed) : insight);
       } catch (error) {
         console.error("Failed to load insights", error);
         if (cancelled) return;
-        setHistory([]);
-        setSummary(buildInsightSummary(userId, currentProfile, []));
+        setHistory(getDemoAssessments(demoSeed));
+        setSummary(getDemoInsight(demoSeed));
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -77,7 +81,7 @@ export default function InsightsPage() {
   );
 
   if (loading) {
-    return <div className="h-72 animate-pulse rounded-[28px] bg-white/70" />;
+    return <LoadingPanel className="h-72" lines={4} />;
   }
 
   if (!summary) {
@@ -91,16 +95,15 @@ export default function InsightsPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Insights"
-        title="Understand what changed across your saved assessments"
-        description="These insights combine profile completeness, lifestyle scoring, and recent assessment probabilities to show movement over time."
+        title="See the pattern behind your saved assessment activity"
+        description="These insights combine profile readiness, lifestyle scoring, and recent assessment probabilities to surface movement over time."
       />
-
       <div className="grid gap-4 lg:grid-cols-[1.02fr_0.98fr]">
         <Card className="ink-panel border-0 p-6">
-          <p className="text-xs uppercase tracking-[0.28em] text-white/55">Overall summary</p>
+          <p className="text-xs uppercase tracking-[0.28em] text-white/55">Signal overview</p>
           <div className="mt-5 flex flex-wrap items-end gap-5">
             <div>
               <p className="text-6xl font-semibold text-white">{summary.overallHealthScore}</p>
@@ -110,7 +113,7 @@ export default function InsightsPage() {
               <StatusPill
                 level={summary.riskBand === "Stable" ? "Low" : summary.riskBand === "Monitor" ? "Moderate" : "High"}
                 label={summary.riskBand}
-                className="bg-white/10 text-white"
+                className="border-white/10 bg-white/10 text-white"
               />
             </div>
           </div>
@@ -128,15 +131,18 @@ export default function InsightsPage() {
 
         <Card className="shell-card border-0 p-6">
           <div className="flex items-start gap-3">
-            <ActivitySquare className="mt-1 h-5 w-5 text-gray-950" />
+            <ActivitySquare className="mt-1 h-5 w-5 text-[#10253c]" />
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Recommendations</p>
-              <h3 className="mt-2 text-2xl font-semibold text-gray-950">What changed recently</h3>
+              <h3 className="mt-2 text-2xl font-semibold text-gray-950">What shifted recently</h3>
             </div>
           </div>
           <div className="mt-5 space-y-3">
-            {summary.recommendations.map((recommendation) => (
-              <div key={recommendation} className="rounded-[22px] bg-[#f7f4ef] p-4 text-sm leading-7 text-gray-600">
+            {summary.recommendations.map((recommendation, index) => (
+              <div
+                key={recommendation}
+                className={`rounded-[22px] p-4 text-sm leading-7 text-gray-600 ${index % 2 === 0 ? "bubble-card" : "clay-card"}`}
+              >
                 {recommendation}
               </div>
             ))}
@@ -147,21 +153,21 @@ export default function InsightsPage() {
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
         <Card className="shell-card border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Trend chart</p>
-          <h3 className="mt-2 text-2xl font-semibold text-gray-950">Probability trend</h3>
+          <h3 className="mt-2 text-2xl font-semibold text-gray-950">Probability movement</h3>
           <div className="mt-6 h-[280px]">
             {trend.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={trend}>
                   <defs>
                     <linearGradient id="insightGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#53b6ff" stopOpacity={0.55} />
-                      <stop offset="95%" stopColor="#53b6ff" stopOpacity={0.05} />
+                      <stop offset="5%" stopColor="#73C9CF" stopOpacity={0.55} />
+                      <stop offset="95%" stopColor="#73C9CF" stopOpacity={0.05} />
                     </linearGradient>
                   </defs>
                   <XAxis dataKey="date" axisLine={false} tickLine={false} />
                   <YAxis hide domain={[0, 100]} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="probability" stroke="#17181f" strokeWidth={2} fill="url(#insightGradient)" />
+                  <Area type="monotone" dataKey="probability" stroke="#10253C" strokeWidth={2.5} fill="url(#insightGradient)" />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
@@ -175,8 +181,8 @@ export default function InsightsPage() {
         <Card className="shell-card border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Recent modules</p>
           <div className="mt-5 space-y-3">
-            {history.slice(0, 5).map((record) => (
-              <div key={record.id} className="rounded-[22px] bg-[#f7f4ef] p-4">
+            {history.slice(0, 5).map((record, index) => (
+              <div key={record.id} className={`rounded-[22px] p-4 ${index % 2 === 0 ? "mesh-panel" : "bubble-card"}`}>
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-semibold capitalize text-gray-950">{record.assessmentType}</p>

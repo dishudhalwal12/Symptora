@@ -15,10 +15,10 @@ export default function SymptomCheckerPage() {
   return (
     <div className="min-h-screen px-3 py-3 md:px-5 md:py-5">
       <div className="mx-auto max-w-[1520px] space-y-5">
-        <header className="glass-header rounded-[38px] rounded-br-[78px] p-4 md:p-5">
+        <header className="glass-header rounded-[2.4rem] p-4 md:p-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <Link href="/" className="flex items-center gap-3">
-              <BrandLockup label="Symptom likelihood explorer" markClassName="h-12 w-12 rounded-[18px]" labelClassName="text-lg font-semibold text-[#24304d]" />
+              <BrandLockup label="Symptom signal explorer" markClassName="h-12 w-12 rounded-[1rem]" labelClassName="text-lg font-semibold text-[#171717]" />
             </Link>
 
             <div className="flex flex-wrap gap-3">
@@ -33,17 +33,17 @@ export default function SymptomCheckerPage() {
         </header>
 
         <section className="grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-          <div className="shell-card rounded-[40px] rounded-tr-[92px] rounded-bl-[72px] p-6 md:p-8">
+          <div className="shell-card rounded-[2.6rem] p-6 md:p-8">
             <p className="medify-pill">Symptom-led screening</p>
-            <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[0.92] tracking-[-0.04em] text-[#24304d] md:text-7xl">
-              Select the disease concern, capture symptoms, and review the estimated chances.
+            <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[0.92] tracking-[-0.06em] text-[#171717] md:text-7xl">
+              Pick the condition, mark the signal, and get a fast first direction.
             </h1>
-            <p className="mt-6 max-w-2xl text-sm leading-8 text-[#68779b] md:text-base">
-              Patients can begin with the condition they are worried about, describe what they feel, and move into a clearer symptom-based likelihood review.
+            <p className="mt-6 max-w-2xl text-sm leading-8 text-[#3d3d3d] md:text-base">
+              This public preview shows the redesigned Symptora intake flow with a much stronger visual identity: start from the concern, describe symptoms in natural language, and get a clear early screening view.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/register">
-                <Button size="lg">Use Medify in full</Button>
+                <Button size="lg">Use Symptora in full</Button>
               </Link>
               <Link href="/">
                 <Button size="lg" variant="outline">
@@ -53,37 +53,39 @@ export default function SymptomCheckerPage() {
             </div>
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <InfoBubble label="Start point" value="Disease concern" className="bubble-card rounded-[24px] rounded-tr-[46px]" />
-              <InfoBubble label="Input style" value="Symptoms + notes" className="mesh-panel rounded-[24px] rounded-bl-[46px]" />
-              <InfoBubble label="Output" value="Chance + next steps" className="accent-panel rounded-[24px] rounded-tr-[38px]" />
+              <InfoBubble label="Start point" value="Disease concern" className="bubble-card rounded-[1.5rem]" />
+              <InfoBubble label="Input style" value="Symptoms + notes" className="mesh-panel rounded-[1.5rem]" />
+              <InfoBubble label="Output" value="Chance + next steps" className="accent-panel rounded-[1.5rem]" />
             </div>
           </div>
 
           <div className="grid gap-5">
-            <div className="ink-panel rounded-[36px] rounded-bl-[76px] p-6">
-              <p className="text-xs uppercase tracking-[0.24em] text-white/60">How it works</p>
+            <div className="ink-panel rounded-[2.25rem] p-6">
+              <p className="text-xs font-black uppercase tracking-[0.24em] text-white/60">How it works</p>
               <div className="mt-5 space-y-3 text-sm leading-7 text-white/82">
                 {SCREENING_POINTS.map((point, index) => (
-                  <p key={point}>{index + 1}. {point}</p>
+                  <p key={point}>
+                    {index + 1}. {point}
+                  </p>
                 ))}
               </div>
             </div>
 
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-1">
-              <div className="bubble-card rounded-[34px] rounded-tr-[70px] p-6">
+              <div className="bubble-card rounded-[2.2rem] p-6">
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className="h-5 w-5 text-[#52638b]" />
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#68779b]">Result focus</p>
+                  <ShieldCheck className="h-5 w-5 text-[#171717]" />
+                  <p className="text-sm font-black uppercase tracking-[0.18em] text-[#171717]/65">Result focus</p>
                 </div>
-                <p className="mt-4 text-sm leading-7 text-[#52638b]">
+                <p className="mt-4 text-sm leading-7 text-[#171717]/78">
                   The result view keeps the estimate, matched indicators, and next questions together so the patient and clinician can understand the flow quickly.
                 </p>
               </div>
 
-              <div className="clay-card rounded-[34px] rounded-bl-[70px] p-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#68779b]">Workspace ready</p>
-                <p className="mt-4 text-sm leading-7 text-[#52638b]">
-                  Continue inside Medify to save the screening, add records, and carry the case into deeper assessments.
+              <div className="clay-card rounded-[2.2rem] p-6">
+                <p className="text-sm font-black uppercase tracking-[0.18em] text-[#171717]/65">Workspace ready</p>
+                <p className="mt-4 text-sm leading-7 text-[#171717]/78">
+                  Continue inside Symptora to save the screening, add records, and carry the case into deeper assessments.
                 </p>
               </div>
             </div>
@@ -92,14 +94,14 @@ export default function SymptomCheckerPage() {
 
         <SymptomLikelihoodWorkbench />
 
-        <section className="bubble-card rounded-[36px] rounded-tr-[78px] p-6">
+        <section className="bubble-card rounded-[2.25rem] p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Continue in workspace</p>
-              <h2 className="mt-2 text-3xl font-semibold text-[#24304d]">Save the screening flow inside the full healthcare workspace</h2>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Continue in workspace</p>
+              <h2 className="mt-2 text-3xl font-semibold text-[#171717]">Save the screening flow inside the full Symptora workspace</h2>
             </div>
-            <Link href="/register" className="inline-flex items-center gap-2 text-sm font-semibold text-[#24304d] underline decoration-2 underline-offset-4">
-              Create your Medify account
+            <Link href="/register" className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-[0.14em] text-[#171717] underline decoration-[3px] underline-offset-4">
+              Create your Symptora account
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -120,8 +122,8 @@ function InfoBubble({
 }) {
   return (
     <div className={`${className} p-4`}>
-      <p className="text-xs uppercase tracking-[0.2em] text-[#68779b]">{label}</p>
-      <p className="mt-3 text-lg font-semibold text-[#24304d]">{value}</p>
+      <p className="text-xs font-black uppercase tracking-[0.2em] text-[#171717]/65">{label}</p>
+      <p className="mt-3 text-lg font-semibold text-[#171717]">{value}</p>
     </div>
   );
 }

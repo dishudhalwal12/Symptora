@@ -19,23 +19,24 @@ import {
   HEART_THAL_OPTIONS,
 } from "@/lib/assessment-options";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessmentsByType } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, HeartAssessmentInput } from "@/types";
 
 const DEFAULT_FORM: HeartAssessmentInput = {
-  age: 0,
+  age: 42,
   sex: "Male",
-  cp: HEART_CHEST_PAIN_OPTIONS[0],
-  trestbps: 0,
-  chol: 0,
-  fbs: false,
-  restecg: HEART_REST_ECG_OPTIONS[0],
-  thalch: 0,
-  exang: false,
-  oldpeak: 0,
-  slope: HEART_SLOPE_OPTIONS[0],
-  ca: "0",
-  thal: HEART_THAL_OPTIONS[0],
+  cp: "asymptomatic",
+  trestbps: 148,
+  chol: 238,
+  fbs: true,
+  restecg: "ST-T wave abnormality",
+  thalch: 143,
+  exang: true,
+  oldpeak: 2.1,
+  slope: "flat",
+  ca: "1",
+  thal: "reversible defect",
 };
 
 export default function HeartAssessmentPage() {
@@ -53,7 +54,7 @@ export default function HeartAssessmentPage() {
     void (async () => {
       const assessmentService = await getAssessmentService();
       const records = await assessmentService.getRelatedAssessments(user.uid, "heart");
-      setHistory(records);
+      setHistory(records.length > 0 ? records : getDemoAssessmentsByType("heart", { uid: user.uid }));
       setLoadingHistory(false);
     })();
   }, [user]);
@@ -261,7 +262,7 @@ function SelectField({
     <div>
       <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
       <select
-        className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+        className="field-select"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >

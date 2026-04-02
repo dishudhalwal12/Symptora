@@ -3,8 +3,8 @@
 import { MoonStar, SunMedium } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "medify-theme";
-const THEME_EVENT = "medify-theme-change";
+const STORAGE_KEY = "symptora-theme";
+const THEME_EVENT = "symptora-theme-change";
 
 type Theme = "dark" | "light";
 
@@ -55,7 +55,7 @@ export function ThemeToggle() {
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={theme === "dark"}
       onClick={toggleTheme}
-      className="fixed bottom-4 right-4 z-[60] inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/78 px-4 py-3 text-sm font-semibold text-[#24304d] shadow-[8px_8px_18px_rgba(170,184,217,0.16)] transition hover:scale-[1.01] dark:border-[#263655] dark:bg-[#121b2f]/82 dark:text-[#edf3ff] dark:shadow-[8px_8px_18px_rgba(2,6,15,0.26)]"
+      className="fixed bottom-4 right-4 z-[60] inline-flex items-center gap-2 rounded-full border-[3px] border-[#171717] bg-[#fffdf5] px-4 py-3 text-[11px] font-black uppercase tracking-[0.18em] text-[#171717] shadow-[6px_6px_0_#171717] transition hover:-translate-x-0.5 hover:-translate-y-0.5 dark:border-[#f8f4ea] dark:bg-[#171717] dark:text-[#f8f4ea] dark:shadow-[6px_6px_0_#000000]"
     >
       {theme === "dark" ? <SunMedium className="h-4 w-4" /> : <MoonStar className="h-4 w-4" />}
       {theme === "dark" ? "Light mode" : "Dark mode"}

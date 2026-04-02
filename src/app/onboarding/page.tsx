@@ -8,11 +8,13 @@ import { ListEditor } from "@/components/profile/ListEditor";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { BLOOD_GROUP_OPTIONS, GENDER_OPTIONS } from "@/lib/assessment-options";
+import { getDisplayProfile, shouldUseDemoProfile } from "@/lib/demo-data";
 import {
   ONBOARDING_STEPS,
   getOnboardingProgress,
@@ -123,10 +125,13 @@ export default function OnboardingPage() {
   const baseProfile = useMemo(
     () =>
       user && !profileLoading
-        ? mergeProfileWithDefaults(profile || storedDraft, {
-            uid: user.uid,
-            fullName: user.fullName,
-          })
+        ? getDisplayProfile(
+            user,
+            mergeProfileWithDefaults(profile || storedDraft, {
+              uid: user.uid,
+              fullName: user.fullName,
+            })
+          )
         : null,
     [profile, profileLoading, storedDraft, user]
   );
@@ -259,7 +264,9 @@ export default function OnboardingPage() {
   if (!user || profileLoading || !draft) {
     return (
       <div className="px-4 py-6 md:px-6 md:py-8">
-        <div className="mx-auto h-[520px] max-w-6xl animate-pulse rounded-[32px] bg-white/70" />
+        <div className="mx-auto max-w-6xl">
+          <LoadingPanel className="h-[520px]" lines={6} />
+        </div>
       </div>
     );
   }
@@ -270,9 +277,8 @@ export default function OnboardingPage() {
         <PageIntro
           eyebrow="Onboarding"
           title="Build your baseline before you enter the workspace"
-          description="This first-run intake collects the health details Medify needs before the main dashboard becomes useful. Your answers are saved as you move through the steps."
+          description="This first-run intake collects the health details Symptora needs before the main dashboard becomes useful. Your answers are saved as you move through the steps."
         />
-
         {bootstrapWarning || profileError || saveError ? (
           <div className="mb-6">
             <RecoveryState
@@ -370,7 +376,7 @@ export default function OnboardingPage() {
                   </Field>
                   <Field label="Gender" error={fieldErrors.gender}>
                     <select
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                      className="field-select"
                       value={draft.gender || ""}
                       onChange={(event) => updateDraft("gender", (event.target.value || undefined) as HealthProfile["gender"])}
                     >
@@ -398,7 +404,7 @@ export default function OnboardingPage() {
                   </Field>
                   <Field label="Blood group" error={fieldErrors.bloodGroup}>
                     <select
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                      className="field-select"
                       value={draft.bloodGroup || ""}
                       onChange={(event) => updateDraft("bloodGroup", (event.target.value || undefined) as HealthProfile["bloodGroup"])}
                     >
@@ -608,7 +614,7 @@ function SelectField({
   return (
     <Field label={label} error={error}>
       <select
-        className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+        className="field-select"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >

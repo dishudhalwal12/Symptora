@@ -15,6 +15,7 @@ import { StatusPill } from "@/components/ui/status-pill";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { BLOOD_GROUP_OPTIONS, GENDER_OPTIONS } from "@/lib/assessment-options";
+import { getDisplayProfile, shouldUseDemoProfile } from "@/lib/demo-data";
 import { getProfileCompletion, mergeProfileWithDefaults } from "@/lib/profile";
 import { getProfileService } from "@/services/loaders";
 import { HealthProfile } from "@/types";
@@ -65,9 +66,8 @@ export default function ProfilePage() {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [saveError, setSaveError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
-
   const baseProfile = useMemo(
-    () => (user && profile ? mergeProfileWithDefaults(profile, { uid: user.uid, fullName: user.fullName }) : null),
+    () => (user ? getDisplayProfile(user, profile) : null),
     [profile, user]
   );
   const draft = draftOverride?.uid === user?.uid ? draftOverride : baseProfile;
@@ -132,13 +132,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Health profile"
         title="Manage the baseline behind every assessment"
         description="Your profile is the long-form health record that keeps scores, recommendations, and saved results grounded in your actual baseline."
       />
-
       {profileError ? (
         <div className="mb-4">
           <RecoveryState
@@ -214,7 +213,7 @@ export default function ProfilePage() {
             </Field>
             <Field label="Gender">
               <select
-                className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={draft.gender || ""}
                 onChange={(event) => updateDraft("gender", (event.target.value || undefined) as HealthProfile["gender"])}
               >
@@ -228,7 +227,7 @@ export default function ProfilePage() {
             </Field>
             <Field label="Blood group">
               <select
-                className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={draft.bloodGroup || ""}
                 onChange={(event) => updateDraft("bloodGroup", (event.target.value || undefined) as HealthProfile["bloodGroup"])}
               >
@@ -501,7 +500,7 @@ function SelectField({
   return (
     <Field label={label}>
       <select
-        className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+        className="field-select"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >

@@ -16,38 +16,35 @@ export function BrandMark({
   return (
     <div
       className={cn(
-        "relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-[20px]",
-        "bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.92),rgba(223,235,255,0.9)_34%,rgba(182,213,255,0.98)_68%,rgba(123,165,235,1)_100%)]",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_12px_30px_rgba(109,144,204,0.22)]",
+        "relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-[1.2rem] border-[3px] border-[#171717] bg-[#ffe75c]",
+        "shadow-[5px_5px_0_#171717]",
         className
       )}
     >
       <div
         className={cn(
-          "absolute inset-[7px] rounded-[16px] border border-white/78 bg-white/42 backdrop-blur-xl",
+          "absolute inset-[7px] rounded-[0.9rem] border-[2px] border-[#171717] bg-[#fffdf5]",
           ringClassName
         )}
       />
-      <div className="relative z-10 flex h-full w-full items-center justify-center">
-        <span
-          className={cn(
-            "absolute h-[20px] w-[6px] rounded-full bg-[#1f3e74]",
-            crossClassName
-          )}
+      <svg viewBox="0 0 64 64" className="relative z-10 h-full w-full p-2.5" aria-hidden="true">
+        <path
+          d="M12 34h11l5-10 5 16 6-11h13"
+          fill="none"
+          stroke="#171717"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="5"
+          className={cn(crossClassName)}
         />
-        <span
-          className={cn(
-            "absolute h-[6px] w-[20px] rounded-full bg-[#1f3e74]",
-            crossClassName
-          )}
+        <circle
+          cx="46"
+          cy="19"
+          r="4.5"
+          fill="#ff8bc2"
+          className={cn(dotClassName)}
         />
-        <span
-          className={cn(
-            "absolute right-[10px] top-[10px] h-[6px] w-[6px] rounded-full bg-[#ff935f] shadow-[0_0_0_3px_rgba(255,255,255,0.56)]",
-            dotClassName
-          )}
-        />
-      </div>
+      </svg>
     </div>
   );
 }
@@ -71,8 +68,8 @@ export function BrandLockup({
     <div className={cn("flex items-center gap-3", className)}>
       <BrandMark className={markClassName} />
       <div>
-        <p className={cn("text-xs uppercase tracking-[0.32em] text-[#68779b]", brandClassName)}>Medify</p>
-        {label ? <p className={cn("text-base font-semibold text-[#24304d]", labelClassName)}>{label}</p> : null}
+        <p className={cn("text-xs font-black uppercase tracking-[0.32em] text-[#171717]", brandClassName)}>Symptora</p>
+        {label ? <p className={cn("text-base font-semibold text-[#171717]", labelClassName)}>{label}</p> : null}
       </div>
     </div>
   );

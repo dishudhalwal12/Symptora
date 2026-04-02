@@ -8,8 +8,10 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import { ResultDetailView } from "@/components/assessments/ResultDetailView";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessmentById, getDemoRecordById, isDemoId } from "@/lib/demo-data";
 import { assessmentService } from "@/services/assessment.service";
 import { recordsService } from "@/services/records.service";
 import { AssessmentRecord, UploadRecord } from "@/types";
@@ -30,14 +32,18 @@ export default function HistoryDetailPage() {
 
     async function loadHistoryItem() {
       try {
-        const assessment = await assessmentService.getAssessmentById(historyId);
+        const assessment = isDemoId(historyId)
+          ? getDemoAssessmentById(historyId, { uid: user?.uid })
+          : await assessmentService.getAssessmentById(historyId);
         if (cancelled) return;
 
         setResult(assessment);
         setError(null);
 
         if (assessment?.linkedUploadId) {
-          const upload = await recordsService.getRecordById(assessment.linkedUploadId);
+          const upload = isDemoId(assessment.linkedUploadId)
+            ? getDemoRecordById(assessment.linkedUploadId, { uid: assessment.uid })
+            : await recordsService.getRecordById(assessment.linkedUploadId);
           if (cancelled) return;
           setLinkedRecord(upload);
         } else {
@@ -61,10 +67,10 @@ export default function HistoryDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [historyId]);
+  }, [historyId, user?.uid]);
 
   if (loading) {
-    return <div className="h-72 animate-pulse rounded-[28px] bg-white/70" />;
+    return <LoadingPanel className="h-72" lines={4} />;
   }
 
   if (!user) {
@@ -89,7 +95,7 @@ export default function HistoryDetailPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <Link href="/history" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-gray-600">
         <ArrowLeft className="h-4 w-4" />
         Back to history
@@ -100,7 +106,6 @@ export default function HistoryDetailPage() {
         title="Assessment snapshot"
         description="This detail view preserves the original inputs, prediction output, interpretation, and any linked record context."
       />
-
       <ResultDetailView result={result} linkedRecord={linkedRecord} userName={user.fullName} />
     </div>
   );

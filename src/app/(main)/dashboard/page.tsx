@@ -16,9 +16,11 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { buttonStyles } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessments, getDemoInsight, getDemoRecords, getDisplayProfile } from "@/lib/demo-data";
 import { buildInsightSummary } from "@/lib/scoring";
 import { getAssessmentService, getInsightsService, getRecordsService } from "@/services/loaders";
 import { AssessmentRecord, InsightSummary, RiskLevel, UploadRecord } from "@/types";
@@ -48,12 +50,13 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    if (!user || !profile) {
+    if (!user) {
       return;
     }
 
     const currentUser = user;
-    const currentProfile = profile;
+    const currentProfile = getDisplayProfile(user, profile);
+    const demoSeed = { uid: currentUser.uid, fullName: currentProfile?.fullName || currentUser.fullName };
     let cancelled = false;
 
     async function loadDashboard() {
@@ -70,6 +73,8 @@ export default function DashboardPage() {
           assessmentService.getHistory(currentUser.uid),
           recordsService.getRecords(currentUser.uid),
         ]);
+        const demoAssessments = getDemoAssessments(demoSeed);
+        const demoRecords = getDemoRecords(demoSeed);
 
         if (cancelled) {
           return;
@@ -89,9 +94,9 @@ export default function DashboardPage() {
           return;
         }
 
-        setAssessments(history);
-        setRecords(uploadRecords);
-        setInsight(summary);
+        setAssessments(history.length > 0 ? history : demoAssessments);
+        setRecords(uploadRecords.length > 0 ? uploadRecords : demoRecords);
+        setInsight(history.length > 0 ? summary : getDemoInsight(demoSeed));
       } catch (error) {
         if (cancelled) {
           return;
@@ -100,9 +105,9 @@ export default function DashboardPage() {
         setDashboardError(
           error instanceof Error ? error.message : "We could not load your saved dashboard data right now."
         );
-        setInsight(buildInsightSummary(currentUser.uid, currentProfile, []));
-        setAssessments([]);
-        setRecords([]);
+        setInsight(getDemoInsight(demoSeed));
+        setAssessments(getDemoAssessments(demoSeed));
+        setRecords(getDemoRecords(demoSeed));
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -127,10 +132,10 @@ export default function DashboardPage() {
   );
 
   if (loading) {
-    return <div className="h-[520px] animate-pulse rounded-[32px] bg-white/70" />;
+    return <LoadingPanel className="h-[520px]" lines={6} />;
   }
 
-  if (!user || !profile || !insight) {
+  if (!user || !insight) {
     return (
       <EmptyState
         icon={Sparkles}
@@ -142,14 +147,15 @@ export default function DashboardPage() {
     );
   }
 
-  const firstName = (profile.fullName || user.fullName)?.split(" ")[0] || "there";
+  const displayProfile = getDisplayProfile(user, profile);
+  const firstName = (displayProfile?.fullName || user.fullName)?.split(" ")[0] || "there";
   const latestAssessment = assessments[0] || null;
 
   return (
-    <div className="space-y-5">
+    <div className="page-fade-in space-y-5">
       <section className="grid gap-5 xl:grid-cols-[1.12fr_0.88fr]">
-        <div className="ink-panel rounded-[40px] rounded-br-[88px] p-6 md:p-7">
-          <p className="medify-pill bg-white/14 text-white">Medify overview</p>
+        <div className="ink-panel rounded-[2.5rem] p-6 md:p-7">
+          <p className="medify-pill bg-[#fff7c5] text-[#171717]">Symptora pulse</p>
           <div className="mt-5 grid gap-6 lg:grid-cols-[1fr_auto]">
             <div className="max-w-2xl">
               <div className="flex flex-wrap items-center gap-3">
@@ -161,10 +167,10 @@ export default function DashboardPage() {
               </p>
 
               {welcomeFlow ? (
-                <div className="mt-5 rounded-[24px] bg-white/12 px-4 py-4 text-sm text-white backdrop-blur-xl">
+                <div className="mt-5 rounded-[1.5rem] border-[3px] border-white/15 bg-white/10 px-4 py-4 text-sm text-white">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4" />
-                    Onboarding complete. Your Medify workspace and the symptom-led flow are ready.
+                    Onboarding complete. Your Symptora workspace and the symptom-led flow are ready.
                   </div>
                 </div>
               ) : null}
@@ -188,10 +194,10 @@ export default function DashboardPage() {
         </div>
 
         <div className="grid gap-5">
-          <section className="shell-card rounded-[34px] rounded-tr-[72px] p-5">
-            <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Fastest entry point</p>
-            <h3 className="mt-3 text-3xl font-semibold text-[#24304d]">Launch the symptom explorer first</h3>
-            <p className="mt-3 text-sm leading-7 text-[#52638b]">
+          <section className="shell-card rounded-[2.2rem] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Fastest entry point</p>
+            <h3 className="mt-3 text-3xl font-semibold text-[#171717]">Launch the symptom explorer first</h3>
+            <p className="mt-3 text-sm leading-7 text-[#171717]/78">
               Start from the suspected disease, then capture symptoms and review the estimated chance before moving into deeper assessments.
             </p>
             <div className="mt-5 grid gap-3">
@@ -204,35 +210,35 @@ export default function DashboardPage() {
                   key={item.href}
                   href={item.href}
                   className={`rounded-[24px] px-4 py-4 transition ${
-                    index === 0 ? "bubble-card rounded-tr-[58px]" : index === 1 ? "mesh-panel rounded-bl-[58px]" : "clay-card rounded-tr-[42px]"
+                    index === 0 ? "bubble-card rounded-[1.6rem]" : index === 1 ? "mesh-panel rounded-[1.6rem]" : "clay-card rounded-[1.6rem]"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <span className="flex items-center gap-3 text-sm font-semibold text-[#24304d]">
+                    <span className="flex items-center gap-3 text-sm font-semibold text-[#171717]">
                       <item.icon className="h-5 w-5" />
                       {item.label}
                     </span>
-                    <ArrowRight className="h-4 w-4 text-[#24304d]" />
+                    <ArrowRight className="h-4 w-4 text-[#171717]" />
                   </div>
                 </Link>
               ))}
             </div>
           </section>
 
-          <section className="bubble-card rounded-[34px] rounded-bl-[72px] p-5">
-            <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Latest result</p>
+          <section className="bubble-card rounded-[2.2rem] p-5">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Latest result</p>
             {latestAssessment ? (
               <div className="mt-4">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-3xl font-semibold text-[#24304d]">{latestAssessment.predictionLabel}</p>
-                    <p className="mt-2 text-sm capitalize leading-7 text-[#52638b]">
+                    <p className="text-3xl font-semibold text-[#171717]">{latestAssessment.predictionLabel}</p>
+                    <p className="mt-2 text-sm capitalize leading-7 text-[#171717]/78">
                       {latestAssessment.assessmentType} assessment
                     </p>
                   </div>
                   <StatusPill level={latestAssessment.riskLevel} />
                 </div>
-                <p className="mt-4 text-sm leading-7 text-[#52638b]">{latestAssessment.recommendation}</p>
+                <p className="mt-4 text-sm leading-7 text-[#171717]/78">{latestAssessment.recommendation}</p>
                 <Link
                   href={`/history/${latestAssessment.id}`}
                   className={`mt-5 inline-flex ${buttonStyles({ variant: "outline" })}`}
@@ -242,8 +248,8 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="mt-4">
-                <p className="text-2xl font-semibold text-[#24304d]">No assessment runs yet</p>
-                <p className="mt-3 text-sm leading-7 text-[#52638b]">
+                <p className="text-2xl font-semibold text-[#171717]">No assessment runs yet</p>
+                <p className="mt-3 text-sm leading-7 text-[#171717]/78">
                   Start with the symptom explorer to guide the case, then move into diabetes, heart, kidney, or liver modules when values are available.
                 </p>
               </div>

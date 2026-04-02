@@ -136,7 +136,7 @@ class AuthService {
 
     if (!doc) {
       try {
-        await this.bootstrapUser(firebaseUser, firebaseUser.displayName || "Medify User");
+        await this.bootstrapUser(firebaseUser, firebaseUser.displayName || "Symptora User");
         const bootstrapped = await getDocument<UserDocument>("users", firebaseUser.uid);
 
         if (bootstrapped) {
@@ -144,7 +144,7 @@ class AuthService {
             uid: bootstrapped.uid || firebaseUser.uid,
             email: bootstrapped.email || firebaseUser.email || "",
             fullName:
-              bootstrapped.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "Medify User",
+              bootstrapped.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "Symptora User",
             role: bootstrapped.role || "user",
           };
         }
@@ -158,7 +158,7 @@ class AuthService {
     return {
       uid: doc.uid || firebaseUser.uid,
       email: doc.email || firebaseUser.email || "",
-      fullName: doc.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "Medify User",
+      fullName: doc.fullName || firebaseUser.displayName || firebaseUser.email?.split("@")[0] || "Symptora User",
       role: doc.role || "user",
     };
   }
@@ -198,7 +198,7 @@ class AuthService {
     return {
       uid: firebaseUser.uid,
       email: firebaseUser.email,
-      fullName: firebaseUser.displayName || firebaseUser.email.split("@")[0] || "Medify User",
+      fullName: firebaseUser.displayName || firebaseUser.email.split("@")[0] || "Symptora User",
       role: "user",
     };
   }

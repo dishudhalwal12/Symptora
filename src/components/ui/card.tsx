@@ -6,7 +6,7 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
     <div
       ref={ref}
       className={cn(
-        "overflow-hidden rounded-[36px] border border-white/82 bg-[linear-gradient(155deg,rgba(255,255,255,0.76),rgba(246,243,255,0.84))] text-gray-950 shadow-[12px_12px_26px_rgba(167,179,214,0.14),-6px_-6px_16px_rgba(255,255,255,0.8)] dark:border-[#263655] dark:bg-[linear-gradient(155deg,rgba(18,29,52,0.9),rgba(10,18,34,0.82))] dark:text-[#edf3ff] dark:shadow-[12px_12px_26px_rgba(2,6,15,0.28)]",
+        "overflow-hidden rounded-[2rem] border-[3px] border-[#171717] bg-[#fffdf5] text-[#171717] shadow-[8px_8px_0_#171717] transition duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[11px_11px_0_#171717] dark:border-[#f8f4ea] dark:bg-[#f8f4ea] dark:text-[#171717] dark:shadow-[8px_8px_0_#000000]",
         className
       )}
       {...props}
@@ -17,21 +17,21 @@ Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+    <div ref={ref} className={cn("flex flex-col space-y-2 p-6", className)} {...props} />
   )
 )
 CardHeader.displayName = "CardHeader"
 
 const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("text-xl font-semibold leading-none tracking-tight", className)} {...props} />
+    <h3 ref={ref} className={cn("text-2xl font-semibold leading-none tracking-[-0.04em]", className)} {...props} />
   )
 )
 CardTitle.displayName = "CardTitle"
 
 const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-sm text-gray-500 dark:text-[#aab8d8]", className)} {...props} />
+    <p ref={ref} className={cn("text-sm leading-7 text-[#4d4d4d] dark:text-[#4d4d4d]", className)} {...props} />
   )
 )
 CardDescription.displayName = "CardDescription"

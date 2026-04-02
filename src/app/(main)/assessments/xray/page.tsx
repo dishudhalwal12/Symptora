@@ -74,7 +74,7 @@ export default function XrayAssessmentPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <Link href="/assessments" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-gray-600">
         <ArrowLeft className="h-4 w-4" />
         Back to modules
@@ -85,7 +85,6 @@ export default function XrayAssessmentPage() {
         title="Chest X-ray analysis"
         description="Upload a chest X-ray image, save it into the record locker, and run the linked imaging assessment flow from the same screen."
       />
-
       <div className="grid gap-4 xl:grid-cols-[1.08fr_0.92fr]">
         <Card className="shell-card border-0 p-6">
           <div className="flex items-start gap-4">

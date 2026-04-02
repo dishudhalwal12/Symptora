@@ -49,13 +49,13 @@ export default function AdminLoginPage() {
                 <BrandMark className="h-11 w-11 rounded-2xl" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Medify</p>
+                <p className="text-xs uppercase tracking-[0.28em] text-[#5f7180]">Symptora</p>
                 <p className="text-base font-semibold">Admin access</p>
               </div>
             </Link>
             <CardTitle className="text-3xl">Open the control room</CardTitle>
             <CardDescription className="text-base">
-              Sign in with your Medify account and continue if admin access is enabled.
+              Sign in with your Symptora account and continue if admin access is enabled.
             </CardDescription>
           </CardHeader>
 

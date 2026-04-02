@@ -8,6 +8,7 @@ import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { RecoveryState } from "@/components/ui/recovery-state";
+import { getDemoAdminStats } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { UploadRecord } from "@/types";
 
@@ -16,24 +17,17 @@ export default function AdminRecordsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    adminService.getAllRecords().then(setRecords).catch((err) => {
+    adminService.getAllRecords().then((payload) => {
+      const demo = getDemoAdminStats().recentUploads;
+      setRecords(payload.length > 0 ? payload : demo);
+    }).catch((err) => {
       setError(err instanceof Error ? err.message : "Unable to load admin records.");
+      setRecords(getDemoAdminStats().recentUploads);
     });
   }, []);
 
-  if (error) {
-    return (
-      <RecoveryState
-        title="Admin records unavailable"
-        description={error}
-        actionLabel="Retry records"
-        onAction={() => window.location.reload()}
-      />
-    );
-  }
-
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
         title="Records review"
@@ -41,6 +35,16 @@ export default function AdminRecordsPage() {
       />
       <AdminTabs />
 
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Live admin records unavailable"
+            description={error}
+            actionLabel="Retry records"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <Card className="shell-card border-0 p-6">
         <div className="space-y-3">
           {records.length > 0 ? records.map((record) => (

@@ -8,9 +8,11 @@ import { History, LineChart } from "lucide-react";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessments } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, AssessmentType } from "@/types";
 
@@ -35,12 +37,12 @@ export default function HistoryPage() {
         const assessmentService = await getAssessmentService();
         const records = await assessmentService.getHistory(userId);
         if (cancelled) return;
-        setHistory(records);
+        setHistory(records.length > 0 ? records : getDemoAssessments({ uid: userId }));
         setError(null);
       } catch (error) {
         console.error("Failed to load assessment history", error);
         if (cancelled) return;
-        setHistory([]);
+        setHistory(getDemoAssessments({ uid: userId }));
         setError(error instanceof Error ? error.message : "Unable to load assessment history.");
       } finally {
         if (!cancelled) {
@@ -85,23 +87,22 @@ export default function HistoryPage() {
   );
 
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Assessment history"
-        title="Track every saved result over time"
-        description="Filter by module, compare risk movement, and jump into result detail pages that preserve the original inputs and linked files."
+        title="Read the full assessment timeline at a glance"
+        description="Filter by module, compare movement, and open saved result pages that preserve the original inputs, labels, and linked evidence."
       />
-
       <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
         <Card className="shell-card border-0 p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Filters</p>
-              <h3 className="mt-2 text-2xl font-semibold text-gray-950">Timeline</h3>
+              <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Controls</p>
+              <h3 className="mt-2 text-2xl font-semibold text-gray-950">Assessment timeline</h3>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
               <select
-                className="flex h-11 rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={filter}
                 onChange={(event) => setFilter(event.target.value as AssessmentType | "all")}
               >
@@ -113,7 +114,7 @@ export default function HistoryPage() {
                 <option value="xray">X-ray</option>
               </select>
               <select
-                className="flex h-11 rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as SortOption)}
               >
@@ -133,10 +134,14 @@ export default function HistoryPage() {
                 onAction={() => window.location.reload()}
               />
             ) : loading ? (
-              <div className="h-56 animate-pulse rounded-[28px] bg-[#f7f4ef]" />
+              <LoadingPanel className="h-56" lines={4} />
             ) : filteredHistory.length > 0 ? (
-              filteredHistory.map((record) => (
-                <Link key={record.id} href={`/history/${record.id}`} className="block rounded-[24px] bg-[#f7f4ef] p-4 hover:bg-white">
+              filteredHistory.map((record, index) => (
+                <Link
+                  key={record.id}
+                  href={`/history/${record.id}`}
+                  className={`block rounded-[24px] p-4 ${index % 3 === 0 ? "bubble-card" : index % 3 === 1 ? "mesh-panel" : "clay-card"}`}
+                >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                       <p className="text-lg font-semibold capitalize text-gray-950">
@@ -149,7 +154,7 @@ export default function HistoryPage() {
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                       <StatusPill level={record.riskLevel} />
-                      <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-600">
+                      <span className="rounded-full bg-white/88 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gray-600">
                         {record.riskBand}
                       </span>
                     </div>
@@ -166,12 +171,12 @@ export default function HistoryPage() {
           </div>
         </Card>
 
-        <Card className="shell-card border-0 p-6">
+        <Card className="ink-panel border-0 p-6">
           <div className="flex items-center gap-3">
-            <LineChart className="h-5 w-5 text-gray-950" />
+            <LineChart className="h-5 w-5 text-white" />
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Trend view</p>
-              <h3 className="mt-2 text-2xl font-semibold text-gray-950">Probability and score movement</h3>
+              <p className="text-xs uppercase tracking-[0.28em] text-white/55">Trend view</p>
+              <h3 className="mt-2 text-2xl font-semibold text-white">Probability movement</h3>
             </div>
           </div>
 
@@ -181,28 +186,27 @@ export default function HistoryPage() {
                 <AreaChart data={trend}>
                   <defs>
                     <linearGradient id="historyGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#ffb48d" stopOpacity={0.55} />
-                      <stop offset="95%" stopColor="#ffb48d" stopOpacity={0.08} />
+                      <stop offset="5%" stopColor="#F4C57F" stopOpacity={0.62} />
+                      <stop offset="95%" stopColor="#8BD7DA" stopOpacity={0.08} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" axisLine={false} tickLine={false} />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} stroke="#DDE8F4" />
                   <YAxis hide domain={[0, 100]} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="probability" stroke="#17181f" strokeWidth={2} fill="url(#historyGradient)" />
+                  <Area type="monotone" dataKey="probability" stroke="#F4C57F" strokeWidth={2.5} fill="url(#historyGradient)" />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="flex h-full items-center justify-center rounded-[24px] bg-[#f7f4ef] text-sm text-gray-500">
+              <div className="flex h-full items-center justify-center rounded-[24px] border border-white/10 bg-white/6 text-sm text-white/72">
                 Trend movement appears after saved assessments exist.
               </div>
             )}
           </div>
 
-          <div className="mt-5 rounded-[24px] bg-[#17181f] p-5 text-white">
+          <div className="mt-5 rounded-[24px] border border-white/10 bg-white/8 p-5 text-white">
             <p className="text-xs uppercase tracking-[0.28em] text-white/55">Summary</p>
             <p className="mt-3 text-sm leading-7 text-white/78">
-              Use the history view to compare changes in probability, risk level, and overall health score before and
-              after new records or baseline updates.
+              Use the history view to compare how probability changes after new records, updated baseline details, or repeat runs across the same concern.
             </p>
           </div>
         </Card>

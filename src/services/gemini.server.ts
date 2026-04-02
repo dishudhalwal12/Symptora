@@ -258,7 +258,7 @@ Case:
 
 export async function summarizeRecordWithGemini(payload: RecordSummaryPayload) {
   return runJsonPrompt(`
-You are summarizing uploaded medical record text for a healthcare support application called Medify.
+You are summarizing uploaded medical record text for a healthcare support application called Symptora.
 You must not diagnose or invent findings.
 Return valid JSON with keys: explanation, nextSteps.
 

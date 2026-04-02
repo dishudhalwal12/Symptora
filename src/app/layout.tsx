@@ -1,18 +1,29 @@
-import type { Metadata } from 'next';
-import { Manrope, Space_Grotesk } from 'next/font/google';
-import './globals.css';
-import { AuthProvider } from '@/hooks/useAuth';
-import { ThemeToggle } from '@/components/layout/ThemeToggle';
+import type { Metadata } from "next";
+import { Bricolage_Grotesque, Space_Grotesk } from "next/font/google";
 
-const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans', preload: false });
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', preload: false });
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { AuthProvider } from "@/hooks/useAuth";
+import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  preload: false,
+});
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  preload: false,
+});
 
 export const metadata: Metadata = {
-  title: 'Medify | Federated Healthcare Screening',
-  description: 'Symptom-first healthcare screening, records, and explainable disease likelihood workflows.',
+  title: "Symptora | Symptom Intelligence Workspace",
+  description:
+    "Signal-first healthcare screening, records, and explainable risk review inside one bold symptom intelligence workspace.",
   icons: {
-    icon: '/medify-icon.svg',
-    shortcut: '/medify-icon.svg',
+    icon: "/symptora-icon.svg",
+    shortcut: "/symptora-icon.svg",
   },
 };
 
@@ -23,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${manrope.variable} ${spaceGrotesk.variable} min-h-screen flex flex-col`}>
+      <body className={`${spaceGrotesk.variable} ${bricolageGrotesque.variable} flex min-h-screen flex-col`}>
         <AuthProvider>
           {children}
           <ThemeToggle />

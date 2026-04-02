@@ -10,9 +10,12 @@ import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoRecords } from "@/lib/demo-data";
 import type { UploadCategory, UploadRecord } from "@/types";
 
 const CATEGORY_OPTIONS: Array<{ value: UploadCategory; label: string }> = [
@@ -50,12 +53,12 @@ export default function RecordsPage() {
     try {
       const service = await getRecordsService();
       const nextRecords = await service.getRecords(user.uid);
-      setRecords(nextRecords);
+      setRecords(nextRecords.length > 0 ? nextRecords : getDemoRecords({ uid: user.uid }));
       setError(null);
     } catch (loadError) {
       console.error("Failed to load records", loadError);
       setError(loadError instanceof Error ? loadError.message : "Unable to load records.");
-      setRecords([]);
+      setRecords(getDemoRecords({ uid: user.uid }));
     } finally {
       setLoading(false);
     }
@@ -131,26 +134,25 @@ export default function RecordsPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
-        eyebrow="Records locker"
-        title="Log and manage your medical records"
-        description="Upload lab reports, prescriptions, and imaging records into one secure history so linked assessments can open the exact source file later."
+        eyebrow="Evidence locker"
+        title="Store every source document behind the case"
+        description="Upload reports, prescriptions, and imaging files into one connected record layer so assessments and result pages can open the exact evidence later."
       />
-
       <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="shell-card border-0 p-6">
-          <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Record center</p>
-          <h3 className="mt-3 text-2xl font-semibold text-gray-950">Upload a medical record</h3>
-          <p className="mt-2 text-sm leading-7 text-gray-600">
-            Choose a category, attach the file, and add optional notes for context such as doctor, clinic, or observations.
+        <Card className="mesh-panel border-0 p-6">
+          <p className="text-xs uppercase tracking-[0.28em] text-[#5f7180]">Record intake</p>
+          <h3 className="mt-3 text-2xl font-semibold text-gray-950">Add a medical source file</h3>
+          <p className="mt-2 text-sm leading-7 text-[#5f7180]">
+            Choose the record type, attach the file, and capture the context that will matter when someone opens it later.
           </p>
 
           <form className="mt-6 space-y-5" onSubmit={handleSave}>
             <div>
               <Label className="mb-2 block text-sm font-medium text-gray-700">Category</Label>
               <select
-                className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as UploadCategory)}
               >
@@ -178,8 +180,8 @@ export default function RecordsPage() {
 
             <div>
               <Label className="mb-2 block text-sm font-medium text-gray-700">Notes (optional)</Label>
-              <textarea
-                className="flex min-h-[80px] w-full rounded-xl border border-gray-200 bg-transparent px-3 py-2.5 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 resize-none"
+              <Textarea
+                className="min-h-[96px] resize-none"
                 placeholder="Any observations, doctor name, hospital, etc."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
@@ -187,20 +189,20 @@ export default function RecordsPage() {
             </div>
 
             {selectedFile ? (
-              <div className="rounded-[22px] bg-[#f7f4ef] px-4 py-4 text-sm text-gray-600">
+              <div className="bubble-card rounded-[22px] px-4 py-4 text-sm text-gray-600">
                 <p className="font-semibold text-gray-900">{selectedFile.name}</p>
                 <p className="mt-1">{(selectedFile.size / (1024 * 1024)).toFixed(2)} MB</p>
               </div>
             ) : null}
 
             {saving && uploadProgress !== null ? (
-              <div className="rounded-[22px] bg-[#f7f4ef] px-4 py-4">
+              <div className="clay-card rounded-[22px] px-4 py-4">
                 <div className="flex items-center justify-between gap-3 text-sm text-gray-600">
                   <span>Uploading file</span>
                   <span>{uploadProgress}%</span>
                 </div>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-white">
-                  <div className="h-full rounded-full bg-[#24304d]" style={{ width: `${uploadProgress}%` }} />
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/70">
+                  <div className="h-full rounded-full bg-[#10253c]" style={{ width: `${uploadProgress}%` }} />
                 </div>
               </div>
             ) : null}
@@ -216,7 +218,7 @@ export default function RecordsPage() {
         <Card className="shell-card border-0 p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Stored records</p>
+              <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Stored evidence</p>
               <h3 className="mt-2 text-2xl font-semibold text-gray-950">Record library</h3>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
@@ -225,7 +227,7 @@ export default function RecordsPage() {
                 <Input className="pl-9" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search files" />
               </div>
               <select
-                className="flex h-11 rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as UploadCategory | "all")}
               >
@@ -235,7 +237,7 @@ export default function RecordsPage() {
                 ))}
               </select>
               <select
-                className="flex h-11 rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+                className="field-select"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortOption)}
               >
@@ -255,10 +257,10 @@ export default function RecordsPage() {
                 onAction={() => void refreshRecords()}
               />
             ) : loading ? (
-              <div className="h-48 animate-pulse rounded-[28px] bg-[#f7f4ef]" />
+              <LoadingPanel className="h-48" lines={3} />
             ) : filteredRecords.length > 0 ? (
-              filteredRecords.map((record) => (
-                <div key={record.id} className="rounded-[24px] bg-[#f7f4ef] p-4">
+              filteredRecords.map((record, index) => (
+                <div key={record.id} className={`rounded-[24px] p-4 ${index % 3 === 0 ? "bubble-card" : index % 3 === 1 ? "mesh-panel" : "clay-card"}`}>
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                     <div>
                       <Link href={`/records/${record.id}`} className="text-lg font-semibold text-gray-950">
@@ -270,10 +272,10 @@ export default function RecordsPage() {
                           label={record.category.replace("-", " ")}
                         />
                         {record.linkedAssessmentId ? (
-                          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-600">Linked assessment</span>
+                          <span className="rounded-full bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gray-600">Linked assessment</span>
                         ) : null}
                         {record.archived ? (
-                          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-gray-600">Archived</span>
+                          <span className="rounded-full bg-white/85 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-gray-600">Archived</span>
                         ) : null}
                       </div>
                       <p className="mt-3 text-sm text-gray-500">

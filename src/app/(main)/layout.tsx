@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Shell } from '@/components/layout/Shell';
+import { LoadingPanel } from '@/components/ui/loading-panel';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, profileLoading } = useAuth();
@@ -17,12 +18,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   if (loading || profileLoading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(180deg,#fcfaf4_0%,#f4eee4_100%)]">
-        <div className="animate-pulse flex flex-col items-center">
-          <div className="mb-4 h-8 w-8 rounded-full bg-[#dcefe7]"></div>
-          <div className="text-sm font-medium text-[#5f7a81]">
+      <div className="flex min-h-screen items-center justify-center px-4 py-8">
+        <div className="w-full max-w-4xl">
+          <LoadingPanel className="h-[420px]" lines={5} />
+          <p className="mt-4 text-center text-sm font-medium text-[#5f7a81]">
             {loading ? "Loading session..." : "Preparing your workspace..."}
-          </div>
+          </p>
         </div>
       </div>
     );

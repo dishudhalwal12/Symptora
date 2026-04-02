@@ -14,9 +14,9 @@ import {
 import { cn } from "@/lib/utils";
 
 const DISEASE_CARD_TONES = [
-  "clay-card rounded-[28px] rounded-tr-[54px]",
-  "mesh-panel rounded-[28px] rounded-bl-[54px]",
-  "bubble-card rounded-[28px] rounded-tr-[42px]",
+  "clay-card rounded-[2rem]",
+  "mesh-panel rounded-[2rem]",
+  "bubble-card rounded-[2rem]",
 ];
 
 export function SymptomLikelihoodWorkbench() {
@@ -48,14 +48,14 @@ export function SymptomLikelihoodWorkbench() {
 
   return (
     <div className="grid gap-5 2xl:grid-cols-[280px_minmax(0,1fr)_360px]">
-      <aside className="shell-card rounded-[36px] rounded-tr-[74px] p-5 md:p-6">
+      <aside className="shell-card rounded-[2.25rem] p-5 md:p-6">
         <div className="flex flex-col gap-4">
           <div>
             <p className="medify-pill">Disease selection</p>
-            <h3 className="mt-4 text-3xl font-semibold leading-[0.95] text-[#24304d]">
+            <h3 className="mt-4 text-3xl font-semibold leading-[0.95] text-[#171717]">
               Start from what the patient suspects
             </h3>
-            <p className="mt-4 text-sm leading-7 text-[#68779b]">
+            <p className="mt-4 text-sm leading-7 text-[#3d3d3d]">
               Pick the disease concern first, then capture the symptoms the patient is reporting.
             </p>
           </div>
@@ -76,17 +76,17 @@ export function SymptomLikelihoodWorkbench() {
                 className={cn(
                   "w-full p-4 text-left transition",
                   active
-                    ? "ink-panel rounded-[28px] rounded-br-[58px] text-white"
+                    ? "ink-panel rounded-[2rem] text-white"
                     : DISEASE_CARD_TONES[index]
                 )}
               >
-                <p className={cn("text-xs font-semibold uppercase tracking-[0.24em]", active ? "text-white/65" : "text-[#68779b]")}>
+                <p className={cn("text-xs font-black uppercase tracking-[0.24em]", active ? "text-white/65" : "text-[#171717]/65")}>
                   {profile.tagline}
                 </p>
-                <p className={cn("mt-3 text-2xl font-semibold", active ? "text-white" : "text-[#24304d]")}>
+                <p className={cn("mt-3 text-2xl font-semibold", active ? "text-white" : "text-[#171717]")}>
                   {profile.name}
                 </p>
-                <p className={cn("mt-3 text-sm leading-7", active ? "text-white/78" : "text-[#52638b]")}>
+                <p className={cn("mt-3 text-sm leading-7", active ? "text-white/78" : "text-[#171717]/78")}>
                   {profile.description}
                 </p>
               </button>
@@ -96,12 +96,12 @@ export function SymptomLikelihoodWorkbench() {
       </aside>
 
       <section className="space-y-5">
-        <div className="mesh-panel rounded-[38px] rounded-bl-[78px] p-5 md:p-6">
+        <div className="mesh-panel rounded-[2.4rem] p-5 md:p-6">
           <div className="grid gap-5 xl:grid-cols-[1fr_auto]">
             <div>
-              <p className="medify-pill bg-white/76">Symptom board</p>
-              <h4 className="mt-4 text-3xl font-semibold text-[#24304d]">{activeDisease.name}</h4>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-[#52638b]">{activeDisease.highlight}</p>
+              <p className="medify-pill bg-[#171717] text-[#fff7c5]">Symptom board</p>
+              <h4 className="mt-4 text-3xl font-semibold text-[#171717]">{activeDisease.name}</h4>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-[#171717]/78">{activeDisease.highlight}</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
@@ -120,10 +120,10 @@ export function SymptomLikelihoodWorkbench() {
                   type="button"
                   onClick={() => toggleSymptom(symptom.id)}
                   className={cn(
-                    "rounded-full border border-white/85 px-4 py-3 text-sm font-semibold shadow-[10px_10px_18px_rgba(170,184,217,0.12)] transition",
+                    "rounded-full border-[3px] border-[#171717] px-4 py-3 text-sm font-black uppercase tracking-[0.08em] shadow-[4px_4px_0_#171717] transition",
                     active
-                      ? "bg-[linear-gradient(155deg,rgba(69,97,183,0.92),rgba(103,129,209,0.92))] text-white"
-                      : "bg-white/68 text-[#24304d] hover:bg-white/82"
+                      ? "bg-[#171717] text-[#fff7c5]"
+                      : "bg-[#fffdf5] text-[#171717] hover:bg-[#ffe75c]"
                   )}
                 >
                   {symptom.label}
@@ -134,18 +134,18 @@ export function SymptomLikelihoodWorkbench() {
         </div>
 
         <div className="grid gap-5 xl:grid-cols-[0.94fr_1.06fr]">
-          <div className="clay-card rounded-[34px] rounded-tr-[70px] p-5 md:p-6">
+          <div className="clay-card rounded-[2.2rem] p-5 md:p-6">
             <div className="flex items-center gap-3">
-              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-                <FileText className="h-5 w-5 text-[#24304d]" />
+              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[1rem]">
+                <FileText className="h-5 w-5 text-[#fff7c5]" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Patient notes</p>
-                <h4 className="text-2xl font-semibold text-[#24304d]">Add the patient’s own words</h4>
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Patient notes</p>
+                <h4 className="text-2xl font-semibold text-[#171717]">Add the patient’s own words</h4>
               </div>
             </div>
-            <p className="mt-4 text-sm leading-7 text-[#52638b]">
-              Free-text notes help Medify match wording like chest pressure, fatigue, or appetite loss when estimating the chance.
+            <p className="mt-4 text-sm leading-7 text-[#171717]/78">
+              Free-text notes help Symptora match wording like chest pressure, fatigue, or appetite loss when estimating the chance.
             </p>
             <Textarea
               className="mt-4"
@@ -155,14 +155,14 @@ export function SymptomLikelihoodWorkbench() {
             />
           </div>
 
-          <div className="shell-card rounded-[34px] rounded-bl-[70px] p-5 md:p-6">
+          <div className="shell-card rounded-[2.2rem] p-5 md:p-6">
             <div className="flex items-center gap-3">
-              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-                <Activity className="h-5 w-5 text-[#24304d]" />
+              <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[1rem]">
+                <Activity className="h-5 w-5 text-[#fff7c5]" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Signal summary</p>
-                <h4 className="text-2xl font-semibold text-[#24304d]">What the current case already shows</h4>
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Signal summary</p>
+                <h4 className="text-2xl font-semibold text-[#171717]">What the current case already shows</h4>
               </div>
             </div>
 
@@ -180,41 +180,41 @@ export function SymptomLikelihoodWorkbench() {
       </section>
 
       <aside className="space-y-5">
-        <div className="ink-panel rounded-[36px] rounded-br-[74px] p-6">
-          <p className="text-xs uppercase tracking-[0.24em] text-white/60">Chance estimate</p>
+        <div className="ink-panel rounded-[2.25rem] p-6">
+          <p className="text-xs font-black uppercase tracking-[0.24em] text-white/60">Chance estimate</p>
           <div className="mt-4 flex items-start justify-between gap-4">
             <div>
               <p className="text-6xl font-semibold text-white">{result.probability}%</p>
-              <p className="mt-2 text-sm uppercase tracking-[0.18em] text-white/60">{result.band}</p>
+              <p className="mt-2 text-sm font-black uppercase tracking-[0.18em] text-white/60">{result.band}</p>
             </div>
-            <div className="rounded-[22px] bg-white/14 px-4 py-3 text-sm font-semibold text-white backdrop-blur-xl">
+            <div className="rounded-[1.25rem] border-[3px] border-white/15 bg-white/10 px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-white">
               {result.confidenceLabel}
             </div>
           </div>
 
-          <div className="mt-6 h-4 overflow-hidden rounded-full bg-white/12">
+          <div className="mt-6 h-4 overflow-hidden rounded-full border-[3px] border-white/18 bg-white/8">
             <div
-              className="h-full rounded-full bg-[linear-gradient(90deg,rgba(255,200,176,0.98)_0%,rgba(255,236,166,0.98)_100%)]"
+              className="h-full rounded-full bg-[#ffe75c]"
               style={{ width: `${result.probability}%` }}
             />
           </div>
 
           <p className="mt-6 text-sm leading-7 text-white/82">{result.explanation}</p>
 
-          <div className="mt-6 rounded-[24px] bg-white/10 p-4 backdrop-blur-xl">
-            <p className="text-xs uppercase tracking-[0.22em] text-white/60">Clinical caution</p>
+          <div className="mt-6 rounded-[1.5rem] border-[3px] border-white/15 bg-white/8 p-4">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-white/60">Clinical caution</p>
             <p className="mt-3 text-sm leading-7 text-white/82">{result.disease.caution}</p>
           </div>
         </div>
 
-        <div className="bubble-card rounded-[34px] rounded-tr-[70px] p-5">
+        <div className="bubble-card rounded-[2.2rem] p-5">
           <div className="flex items-center gap-3">
-            <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-              <CheckCircle2 className="h-5 w-5 text-[#24304d]" />
+            <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[1rem]">
+              <CheckCircle2 className="h-5 w-5 text-[#fff7c5]" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Matched indicators</p>
-              <h4 className="text-2xl font-semibold text-[#24304d]">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Matched indicators</p>
+              <h4 className="text-2xl font-semibold text-[#171717]">
                 {result.matchedSymptoms.length > 0 ? `${result.matchedSymptoms.length} signs matched` : "Waiting for symptom input"}
               </h4>
             </div>
@@ -225,33 +225,33 @@ export function SymptomLikelihoodWorkbench() {
               result.matchedSymptoms.map((symptom) => (
                 <span
                   key={symptom.id}
-                  className="rounded-full border border-white/84 bg-white/68 px-4 py-2 text-sm font-semibold text-[#24304d]"
+                  className="rounded-full border-[3px] border-[#171717] bg-[#fffdf5] px-4 py-2 text-sm font-black uppercase tracking-[0.08em] text-[#171717] shadow-[3px_3px_0_#171717]"
                 >
                   {symptom.label}
                 </span>
               ))
             ) : (
-              <p className="text-sm leading-7 text-[#52638b]">
+              <p className="text-sm leading-7 text-[#171717]/78">
                 Select the symptoms the patient reports and the matched indicators will appear here.
               </p>
             )}
           </div>
 
           {result.noteMatches.length > 0 ? (
-            <div className="mt-5 rounded-[22px] bg-white/72 px-4 py-4 text-sm leading-7 text-[#52638b]">
-              Medify also found symptom cues inside the free-text notes and merged them into the estimate.
+            <div className="mt-5 rounded-[1.4rem] border-[3px] border-[#171717] bg-[#fffdf5] px-4 py-4 text-sm leading-7 text-[#171717]/78 shadow-[4px_4px_0_#171717]">
+              Symptora also found symptom cues inside the free-text notes and merged them into the estimate.
             </div>
           ) : null}
         </div>
 
-        <div className="accent-panel rounded-[34px] rounded-bl-[70px] p-5 md:p-6">
+        <div className="accent-panel rounded-[2.2rem] p-5 md:p-6">
           <div className="flex items-center gap-3">
-            <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[18px]">
-              <Sparkles className="h-5 w-5 text-[#24304d]" />
+            <div className="medify-orb flex h-12 w-12 items-center justify-center rounded-[1rem]">
+              <Sparkles className="h-5 w-5 text-[#fff7c5]" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#68779b]">Next actions</p>
-              <h4 className="text-2xl font-semibold text-[#24304d]">How to continue the case</h4>
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-[#171717]/65">Next actions</p>
+              <h4 className="text-2xl font-semibold text-[#171717]">How to continue the case</h4>
             </div>
           </div>
 
@@ -260,8 +260,8 @@ export function SymptomLikelihoodWorkbench() {
               <div
                 key={step}
                 className={cn(
-                  "rounded-[22px] px-4 py-4 text-sm leading-7 text-[#24304d]",
-                  index % 2 === 0 ? "bg-white/72" : "bg-white/52"
+                  "rounded-[1.4rem] border-[3px] border-[#171717] px-4 py-4 text-sm leading-7 text-[#171717] shadow-[4px_4px_0_#171717]",
+                  index % 2 === 0 ? "bg-[#fffdf5]" : "bg-[#ffe75c]"
                 )}
               >
                 {step}
@@ -270,9 +270,9 @@ export function SymptomLikelihoodWorkbench() {
           </div>
 
           {result.missingSignals.length > 0 ? (
-            <div className="mt-5 rounded-[22px] bg-white/74 px-4 py-4">
-              <p className="text-sm font-semibold text-[#24304d]">High-value questions still missing</p>
-              <p className="mt-2 text-sm leading-7 text-[#52638b]">
+            <div className="mt-5 rounded-[1.4rem] border-[3px] border-[#171717] bg-[#fffdf5] px-4 py-4 shadow-[4px_4px_0_#171717]">
+              <p className="text-sm font-semibold text-[#171717]">High-value questions still missing</p>
+              <p className="mt-2 text-sm leading-7 text-[#171717]/78">
                 {result.missingSignals.map((symptom) => symptom.label).join(", ")}
               </p>
             </div>
@@ -291,9 +291,9 @@ function QuickSignal({
   value: string;
 }) {
   return (
-    <div className="bubble-card rounded-[24px] px-4 py-4">
-      <p className="text-xs uppercase tracking-[0.18em] text-[#68779b]">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-[#24304d]">{value}</p>
+    <div className="bubble-card rounded-[1.5rem] px-4 py-4">
+      <p className="text-xs font-black uppercase tracking-[0.18em] text-[#171717]/65">{label}</p>
+      <p className="mt-2 text-2xl font-semibold text-[#171717]">{value}</p>
     </div>
   );
 }
@@ -306,9 +306,9 @@ function SummaryTile({
   value: string;
 }) {
   return (
-    <div className="rounded-[22px] border border-white/82 bg-white/58 px-4 py-4 shadow-[10px_10px_18px_rgba(170,184,217,0.1)]">
-      <p className="text-xs uppercase tracking-[0.18em] text-[#68779b]">{label}</p>
-      <p className="mt-2 text-lg font-semibold text-[#24304d]">{value}</p>
+    <div className="rounded-[1.4rem] border-[3px] border-[#171717] bg-[#fffdf5] px-4 py-4 shadow-[4px_4px_0_#171717]">
+      <p className="text-xs font-black uppercase tracking-[0.18em] text-[#171717]/65">{label}</p>
+      <p className="mt-2 text-lg font-semibold text-[#171717]">{value}</p>
     </div>
   );
 }

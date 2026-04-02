@@ -38,11 +38,11 @@ export default function ForgotPasswordPage() {
       <Card className="shell-card w-full max-w-xl border-0 bg-white">
         <CardHeader className="px-6 pt-8 md:px-8">
           <Link href="/" className="mb-4 flex items-center gap-3 text-gray-950">
-            <BrandLockup label="Reset password" markClassName="h-11 w-11 rounded-2xl" brandClassName="text-gray-400" labelClassName="text-base font-semibold text-gray-950" />
+            <BrandLockup label="Reset password" markClassName="h-11 w-11 rounded-2xl" brandClassName="text-[#5f7180]" labelClassName="text-base font-semibold text-gray-950" />
           </Link>
           <CardTitle className="text-3xl">Recover your access</CardTitle>
           <CardDescription className="text-base">
-            Send a password reset email to recover access to your Medify account.
+            Send a password reset email to recover access to your Symptora account.
           </CardDescription>
         </CardHeader>
 
@@ -52,7 +52,7 @@ export default function ForgotPasswordPage() {
               <MailCheck className="h-10 w-10 text-emerald-700" />
               <h2 className="mt-4 text-2xl font-semibold text-gray-950">Reset email sent</h2>
               <p className="mt-3 text-sm leading-7 text-gray-600">
-                If an account exists for <span className="font-semibold text-gray-950">{email}</span>, Medify has sent a password reset link. Return to sign in after updating your password.
+                If an account exists for <span className="font-semibold text-gray-950">{email}</span>, Symptora has sent a password reset link. Return to sign in after updating your password.
               </p>
               <Link href="/login" className="mt-5 inline-flex text-sm font-semibold text-gray-950">
                 Back to sign in

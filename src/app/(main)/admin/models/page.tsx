@@ -7,6 +7,7 @@ import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { RecoveryState } from "@/components/ui/recovery-state";
+import { getDemoModelMetadata } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { ModelMetadata } from "@/types";
 
@@ -15,24 +16,16 @@ export default function AdminModelsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    adminService.getModelMetadata().then(setModels).catch((err) => {
+    adminService.getModelMetadata().then((payload) => {
+      setModels(payload.length > 0 ? payload : getDemoModelMetadata());
+    }).catch((err) => {
       setError(err instanceof Error ? err.message : "Unable to load model metadata.");
+      setModels(getDemoModelMetadata());
     });
   }, []);
 
-  if (error) {
-    return (
-      <RecoveryState
-        title="Model metadata unavailable"
-        description={error}
-        actionLabel="Retry models"
-        onAction={() => window.location.reload()}
-      />
-    );
-  }
-
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
         title="Model metadata"
@@ -40,6 +33,16 @@ export default function AdminModelsPage() {
       />
       <AdminTabs />
 
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Live model metadata unavailable"
+            description={error}
+            actionLabel="Retry models"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <div className="grid gap-4 md:grid-cols-2">
         {models.length > 0 ? models.map((model) => (
           <Card key={`${model.taskType}-${model.version}`} className="shell-card border-0 p-6">

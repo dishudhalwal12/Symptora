@@ -7,7 +7,9 @@ import { AdminTabs } from "@/components/admin/AdminTabs";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getDemoUserDetail, isDemoId } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { AssessmentRecord, UploadRecord, UserDocument } from "@/types";
 
@@ -21,16 +23,34 @@ export default function AdminUserDetailPage() {
   useEffect(() => {
     if (!params?.id) return;
 
-    adminService.getUserDetail(params.id).then((payload) => {
-      setUser(payload.user);
-      setAssessments(payload.assessments);
-      setUploads(payload.uploads);
-      setLoading(false);
+    void Promise.resolve().then(async () => {
+      if (isDemoId(params.id)) {
+        const payload = getDemoUserDetail(params.id);
+        setUser(payload?.user || null);
+        setAssessments(payload?.assessments || []);
+        setUploads(payload?.uploads || []);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const payload = await adminService.getUserDetail(params.id);
+        setUser(payload.user);
+        setAssessments(payload.assessments);
+        setUploads(payload.uploads);
+      } catch {
+        const payload = getDemoUserDetail(params.id);
+        setUser(payload?.user || null);
+        setAssessments(payload?.assessments || []);
+        setUploads(payload?.uploads || []);
+      } finally {
+        setLoading(false);
+      }
     });
   }, [params?.id]);
 
   if (loading) {
-    return <div className="h-72 animate-pulse rounded-[28px] bg-white/70" />;
+    return <LoadingPanel className="h-72" lines={4} />;
   }
 
   if (!user) {
@@ -38,14 +58,13 @@ export default function AdminUserDetailPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
         title={user.fullName}
         description="Review this user’s account metadata, recent assessments, and uploaded medical records."
       />
       <AdminTabs />
-
       <div className="grid gap-4 xl:grid-cols-[0.94fr_1.06fr]">
         <Card className="shell-card border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Account metadata</p>

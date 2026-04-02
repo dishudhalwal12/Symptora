@@ -13,18 +13,19 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessmentsByType } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, DiabetesAssessmentInput } from "@/types";
 
 const DEFAULT_FORM: DiabetesAssessmentInput = {
   Pregnancies: 0,
-  Glucose: 0,
-  BloodPressure: 0,
-  SkinThickness: 0,
-  Insulin: 0,
-  BMI: 0,
-  DiabetesPedigreeFunction: 0,
-  Age: 0,
+  Glucose: 146,
+  BloodPressure: 84,
+  SkinThickness: 26,
+  Insulin: 162,
+  BMI: 29.4,
+  DiabetesPedigreeFunction: 0.64,
+  Age: 42,
 };
 
 export default function DiabetesAssessmentPage() {
@@ -42,7 +43,7 @@ export default function DiabetesAssessmentPage() {
     void (async () => {
       const assessmentService = await getAssessmentService();
       const records = await assessmentService.getRelatedAssessments(user.uid, "diabetes");
-      setHistory(records);
+      setHistory(records.length > 0 ? records : getDemoAssessmentsByType("diabetes", { uid: user.uid }));
       setLoadingHistory(false);
     })();
   }, [user]);

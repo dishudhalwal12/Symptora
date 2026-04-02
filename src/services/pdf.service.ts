@@ -45,7 +45,7 @@ class PdfService {
       color: rgb(0.1, 0.11, 0.15),
     });
 
-    page.drawText("Medify Assessment Summary", {
+    page.drawText("Symptora Assessment Summary", {
       x: 40,
       y: 800,
       size: 22,
@@ -135,7 +135,7 @@ class PdfService {
     });
 
     page.drawText(
-      "Disclaimer: Medify is an academic healthcare support platform and should not replace licensed medical advice.",
+      "Disclaimer: Symptora is an academic healthcare support platform and should not replace licensed medical advice.",
       {
         x: 40,
         y: 60,
@@ -152,7 +152,7 @@ class PdfService {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `medify-${assessment.assessmentType}-${assessment.id}.pdf`;
+    link.download = `symptora-${assessment.assessmentType}-${assessment.id}.pdf`;
     link.click();
     URL.revokeObjectURL(url);
   }

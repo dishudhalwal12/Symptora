@@ -1,6 +1,6 @@
-# Medify
+# Symptora
 
-Medify is a production-style academic healthcare web app built with Next.js, Firebase, Python, and local machine learning models for:
+Symptora is a production-style academic healthcare web app built with Next.js, Firebase, Python, and local machine learning models for:
 
 - diabetes
 - heart disease
@@ -101,8 +101,8 @@ Use this if `git --version` works:
 
 ```powershell
 cd $HOME\Desktop
-git clone https://github.com/dishudhalwal12/medify.git
-cd medify
+git clone https://github.com/dishudhalwal12/symptora.git
+cd symptora
 ```
 
 **Option B: Git is not available**
@@ -112,7 +112,7 @@ Use this if you do not want to install Git.
 2. Click `Code`
 3. Click `Download ZIP`
 4. Extract the ZIP
-5. Rename the extracted folder to `medify` if needed
+5. Rename the extracted folder to `symptora` if needed
 6. Open PowerShell in that extracted folder
 
 **4. Open The Project In VS Code**
@@ -127,7 +127,7 @@ If that command does not work:
 - Open VS Code manually
 - Click `File`
 - Click `Open Folder`
-- Select the `medify` folder
+- Select the `symptora` folder
 
 **5. Environment Setup Is Already Handled**
 
@@ -239,8 +239,8 @@ http://localhost:3000
 
 ```powershell
 git --version
-git clone https://github.com/dishudhalwal12/medify.git
-cd medify
+git clone https://github.com/dishudhalwal12/symptora.git
+cd symptora
 ```
 
 **If Git is missing**
@@ -288,8 +288,8 @@ Then:
 
 ```powershell
 cd $HOME\Desktop
-git clone https://github.com/dishudhalwal12/medify.git
-cd medify
+git clone https://github.com/dishudhalwal12/symptora.git
+cd symptora
 npm install
 py -m pip install -r ml-api/requirements.txt
 py ml-api/scripts/train_all.py

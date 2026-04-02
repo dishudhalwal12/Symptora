@@ -8,6 +8,7 @@ import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { RecoveryState } from "@/components/ui/recovery-state";
+import { getDemoUserDirectory } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { UserDocument } from "@/types";
 
@@ -16,24 +17,16 @@ export default function AdminUsersPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    adminService.getUserDirectory().then(setUsers).catch((err) => {
+    adminService.getUserDirectory().then((payload) => {
+      setUsers(payload.length > 0 ? payload : getDemoUserDirectory());
+    }).catch((err) => {
       setError(err instanceof Error ? err.message : "Unable to load the user directory.");
+      setUsers(getDemoUserDirectory());
     });
   }, []);
 
-  if (error) {
-    return (
-      <RecoveryState
-        title="User directory unavailable"
-        description={error}
-        actionLabel="Retry user directory"
-        onAction={() => window.location.reload()}
-      />
-    );
-  }
-
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
         title="User directory"
@@ -41,6 +34,16 @@ export default function AdminUsersPage() {
       />
       <AdminTabs />
 
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Live user directory unavailable"
+            description={error}
+            actionLabel="Retry user directory"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <Card className="shell-card border-0 p-6">
         <div className="space-y-3">
           {users.length > 0 ? users.map((user) => (

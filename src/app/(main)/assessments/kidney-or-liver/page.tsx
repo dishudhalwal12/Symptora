@@ -13,27 +13,28 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessmentsByType } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, KidneyAssessmentInput, LiverAssessmentInput } from "@/types";
 
 type OrganModule = "kidney" | "liver";
 
 const DEFAULT_LIVER_FORM: LiverAssessmentInput = {
-  Age: 0,
+  Age: 42,
   Gender: "Male",
-  Total_Bilirubin: 0,
-  Direct_Bilirubin: 0,
-  Alkaline_Phosphotase: 0,
-  Alamine_Aminotransferase: 0,
-  Aspartate_Aminotransferase: 0,
-  Total_Protiens: 0,
-  Albumin: 0,
-  Albumin_and_Globulin_Ratio: 0,
+  Total_Bilirubin: 1.4,
+  Direct_Bilirubin: 0.5,
+  Alkaline_Phosphotase: 198,
+  Alamine_Aminotransferase: 58,
+  Aspartate_Aminotransferase: 48,
+  Total_Protiens: 7,
+  Albumin: 3.8,
+  Albumin_and_Globulin_Ratio: 1.1,
 };
 
 const DEFAULT_KIDNEY_FORM: KidneyAssessmentInput = {
-  age: 0,
-  bp: 0,
+  age: 42,
+  bp: 128,
   sg: 1.02,
   al: 0,
   su: 0,
@@ -41,16 +42,16 @@ const DEFAULT_KIDNEY_FORM: KidneyAssessmentInput = {
   pc: "normal",
   pcc: "notpresent",
   ba: "notpresent",
-  bgr: 0,
-  bu: 0,
-  sc: 0,
-  sod: 0,
-  pot: 0,
-  hemo: 0,
-  pcv: 0,
-  wc: 0,
-  rc: 0,
-  htn: "no",
+  bgr: 110,
+  bu: 20,
+  sc: 1,
+  sod: 138,
+  pot: 4.3,
+  hemo: 14.1,
+  pcv: 43,
+  wc: 7800,
+  rc: 4.9,
+  htn: "yes",
   dm: "no",
   cad: "no",
   appet: "good",
@@ -86,7 +87,7 @@ export default function OrganAssessmentPage() {
     void getAssessmentService()
       .then((assessmentService) => assessmentService.getRelatedAssessments(user.uid, activeModule))
       .then((records) => {
-        setHistory(records);
+        setHistory(records.length > 0 ? records : getDemoAssessmentsByType(activeModule, { uid: user.uid }));
         setError(null);
       })
       .catch((historyError) => {
@@ -95,6 +96,7 @@ export default function OrganAssessmentPage() {
             ? historyError.message
             : `Unable to load recent ${activeModule} assessments.`
         );
+        setHistory(getDemoAssessmentsByType(activeModule, { uid: user.uid }));
       })
       .finally(() => {
         setLoadingHistory(false);
@@ -385,7 +387,7 @@ function SelectField({
     <div>
       <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
       <select
-        className="flex h-11 w-full rounded-xl border border-gray-200 bg-transparent px-3 text-sm shadow-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
+        className="field-select"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >

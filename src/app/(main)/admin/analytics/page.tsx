@@ -8,6 +8,7 @@ import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { RecoveryState } from "@/components/ui/recovery-state";
+import { getDemoAdminStats } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { AssessmentRecord, AdminStats } from "@/types";
 
@@ -19,11 +20,16 @@ export default function AdminAnalyticsPage() {
   useEffect(() => {
     Promise.all([adminService.getDashboardStats(), adminService.getAllAssessments()])
       .then(([nextStats, nextAssessments]) => {
-        setStats(nextStats);
-        setAssessments(nextAssessments);
+        const demo = getDemoAdminStats();
+        const shouldUseDemo = nextAssessments.length === 0;
+        setStats(shouldUseDemo ? demo : nextStats);
+        setAssessments(shouldUseDemo ? demo.recentAssessments : nextAssessments);
       })
       .catch((err) => {
         setError(err instanceof Error ? err.message : "Unable to load analytics.");
+        const demo = getDemoAdminStats();
+        setStats(demo);
+        setAssessments(demo.recentAssessments);
       });
   }, []);
 
@@ -36,19 +42,8 @@ export default function AdminAnalyticsPage() {
     [stats]
   );
 
-  if (error) {
-    return (
-      <RecoveryState
-        title="Analytics unavailable"
-        description={error}
-        actionLabel="Retry analytics"
-        onAction={() => window.location.reload()}
-      />
-    );
-  }
-
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
         title="Analytics"
@@ -56,6 +51,16 @@ export default function AdminAnalyticsPage() {
       />
       <AdminTabs />
 
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Live analytics unavailable"
+            description={error}
+            actionLabel="Retry analytics"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <div className="grid gap-4 xl:grid-cols-[1.02fr_0.98fr]">
         <Card className="shell-card border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Module usage</p>

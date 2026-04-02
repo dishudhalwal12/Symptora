@@ -17,16 +17,16 @@ export function buttonStyles({
   size?: ButtonProps["size"]
 } = {}) {
   return cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-full border border-white/85 text-sm font-semibold text-[#24304d] shadow-[8px_8px_18px_rgba(170,184,217,0.14),-4px_-4px_12px_rgba(255,255,255,0.74)] transition duration-150 active:translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9dfff]/70 disabled:pointer-events-none disabled:opacity-50 dark:border-[#263655] dark:text-[#edf3ff] dark:shadow-[8px_8px_18px_rgba(2,6,15,0.24)]",
+    "inline-flex items-center justify-center whitespace-nowrap border-[3px] text-sm font-black uppercase tracking-[0.14em] transition duration-150 hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#7de7ff]/50 disabled:pointer-events-none disabled:opacity-50",
     {
-      "bg-[linear-gradient(155deg,rgba(255,223,211,0.95),rgba(255,245,240,0.9))] hover:bg-[linear-gradient(155deg,rgba(255,229,219,0.98),rgba(255,248,243,0.92))] dark:bg-[linear-gradient(155deg,rgba(53,72,122,0.96),rgba(24,37,64,0.92))] dark:hover:bg-[linear-gradient(155deg,rgba(61,81,136,0.98),rgba(29,45,76,0.94))]": variant === "default",
-      "bg-[linear-gradient(155deg,rgba(255,255,255,0.72),rgba(241,246,255,0.54))] hover:bg-white/82 dark:bg-[linear-gradient(155deg,rgba(20,31,52,0.88),rgba(12,20,36,0.84))] dark:hover:bg-[linear-gradient(155deg,rgba(24,38,63,0.92),rgba(15,24,42,0.88))]": variant === "outline",
-      "bg-white/35 shadow-[6px_6px_14px_rgba(170,184,217,0.1)] hover:bg-white/55 dark:bg-[#15213a]/68 dark:hover:bg-[#1a2745]/82": variant === "ghost",
-      "border-0 bg-transparent p-0 shadow-none underline-offset-4 hover:underline": variant === "link",
-      "bg-[linear-gradient(155deg,rgba(255,194,194,0.92),rgba(255,230,230,0.88))] text-[#8b2330] hover:bg-[linear-gradient(155deg,rgba(255,204,204,0.94),rgba(255,236,236,0.9))] dark:bg-[linear-gradient(155deg,rgba(85,37,47,0.92),rgba(56,22,31,0.9))] dark:text-[#ffb7c0] dark:hover:bg-[linear-gradient(155deg,rgba(97,42,53,0.94),rgba(65,27,36,0.92))]": variant === "danger",
+      "rounded-[1.15rem] border-[#171717] bg-[#171717] text-[#fff7c5] shadow-[5px_5px_0_#171717] hover:bg-[#2d2d2d] dark:border-[#171717] dark:bg-[#171717] dark:text-[#fff7c5] dark:shadow-[5px_5px_0_#000000]": variant === "default",
+      "rounded-[1.15rem] border-[#171717] bg-[#fffdf5] text-[#171717] shadow-[5px_5px_0_#171717] hover:bg-[#ffe75c] dark:border-[#f8f4ea] dark:bg-[#f8f4ea] dark:text-[#171717] dark:shadow-[5px_5px_0_#000000]": variant === "outline",
+      "rounded-[1.15rem] border-transparent bg-transparent text-[#171717] shadow-none hover:bg-black/5 dark:text-[#f8f4ea] dark:hover:bg-white/8": variant === "ghost",
+      "border-0 bg-transparent p-0 normal-case tracking-normal shadow-none underline decoration-[3px] underline-offset-4 hover:no-underline": variant === "link",
+      "rounded-[1.15rem] border-[#171717] bg-[#ff8bc2] text-[#171717] shadow-[5px_5px_0_#171717] hover:bg-[#ffa46f] dark:border-[#171717] dark:bg-[#ff8bc2] dark:text-[#171717] dark:shadow-[5px_5px_0_#000000]": variant === "danger",
       "h-11 px-6 py-2": size === "default",
-      "h-9 px-4 text-xs": size === "sm",
-      "h-12 px-8 text-base": size === "lg",
+      "h-9 rounded-[1rem] px-4 text-[11px]": size === "sm",
+      "h-12 px-8 text-sm": size === "lg",
     },
     className
   )

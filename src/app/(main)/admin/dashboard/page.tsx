@@ -7,8 +7,10 @@ import { AdminTabs } from "@/components/admin/AdminTabs";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
+import { getDemoAdminStats } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { AdminStats } from "@/types";
 
@@ -17,36 +19,39 @@ export default function AdminDashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    adminService.getDashboardStats().then(setStats).catch((err) => {
+    adminService.getDashboardStats().then((payload) => {
+      const shouldUseDemo = payload.totalUsers === 0 && payload.totalAssessments === 0 && payload.totalUploads === 0;
+      setStats(shouldUseDemo ? getDemoAdminStats() : payload);
+    }).catch((err) => {
       setError(err instanceof Error ? err.message : "Unable to load admin dashboard.");
+      setStats(getDemoAdminStats());
     });
   }, []);
 
-  if (error) {
-    return (
-      <RecoveryState
-        title="Admin dashboard unavailable"
-        description={error}
-        actionLabel="Retry admin dashboard"
-        onAction={() => window.location.reload()}
-      />
-    );
-  }
-
   if (!stats) {
-    return <div className="h-72 animate-pulse rounded-[28px] bg-white/70" />;
+    return <LoadingPanel className="h-72" lines={4} />;
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
-        title="Medify control room"
+        title="Symptora control room"
         description="Monitor users, model usage, uploads, and integration health from one operational dashboard."
       />
 
       <AdminTabs />
 
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Live admin dashboard unavailable"
+            description={error}
+            actionLabel="Retry admin dashboard"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Users" value={String(stats.totalUsers)} />
         <MetricCard label="Assessments" value={String(stats.totalAssessments)} />

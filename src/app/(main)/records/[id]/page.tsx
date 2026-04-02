@@ -10,10 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Label } from "@/components/ui/label";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessmentById, getDemoRecordById, isDemoId } from "@/lib/demo-data";
 import { aiService } from "@/services/ai.service";
 import { assessmentService } from "@/services/assessment.service";
 import { recordsService } from "@/services/records.service";
@@ -36,11 +38,15 @@ export default function RecordDetailPage() {
     if (!recordId) return;
 
     try {
-      const nextRecord = await recordsService.getRecordById(recordId);
+      const nextRecord = isDemoId(recordId)
+        ? getDemoRecordById(recordId, { uid: user?.uid })
+        : await recordsService.getRecordById(recordId);
       setRecord(nextRecord);
 
       if (nextRecord?.linkedAssessmentId) {
-        const assessment = await assessmentService.getAssessmentById(nextRecord.linkedAssessmentId);
+        const assessment = isDemoId(nextRecord.linkedAssessmentId)
+          ? getDemoAssessmentById(nextRecord.linkedAssessmentId, { uid: nextRecord.uid })
+          : await assessmentService.getAssessmentById(nextRecord.linkedAssessmentId);
         setLinkedAssessment(assessment);
       } else {
         setLinkedAssessment(null);
@@ -65,7 +71,7 @@ export default function RecordDetailPage() {
     } finally {
       setLoading(false);
     }
-  }, [recordId]);
+  }, [recordId, user?.uid]);
 
   useEffect(() => {
     void refreshRecord();
@@ -104,7 +110,7 @@ export default function RecordDetailPage() {
   }
 
   if (loading) {
-    return <div className="h-72 animate-pulse rounded-[28px] bg-white/70" />;
+    return <LoadingPanel className="h-72" lines={4} />;
   }
 
   if (!user) {
@@ -129,7 +135,7 @@ export default function RecordDetailPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <Link href="/records" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-gray-600">
         <ArrowLeft className="h-4 w-4" />
         Back to records
@@ -140,7 +146,6 @@ export default function RecordDetailPage() {
         title={record.fileName}
         description="Review metadata, download the stored file, inspect linked assessments, and generate an assistive summary when extracted text is available."
       />
-
       <div className="grid gap-4 xl:grid-cols-[0.94fr_1.06fr]">
         <Card className="shell-card border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Record metadata</p>

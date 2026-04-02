@@ -8,8 +8,10 @@ import { ArrowLeft, AlertCircle } from "lucide-react";
 import { ResultDetailView } from "@/components/assessments/ResultDetailView";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { EmptyState } from "@/components/ui/empty-state";
+import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { useAuth } from "@/hooks/useAuth";
+import { getDemoAssessmentById, getDemoRecordById, isDemoId } from "@/lib/demo-data";
 import { getAssessmentService, getRecordsService } from "@/services/loaders";
 import { AssessmentRecord, UploadRecord } from "@/types";
 
@@ -33,14 +35,18 @@ export default function ResultDetailPage() {
           getAssessmentService(),
           getRecordsService(),
         ]);
-        const assessment = await assessmentService.getAssessmentById(resultId);
+        const assessment = isDemoId(resultId)
+          ? getDemoAssessmentById(resultId, { uid: user?.uid })
+          : await assessmentService.getAssessmentById(resultId);
         if (cancelled) return;
 
         setResult(assessment);
         setError(null);
 
         if (assessment?.linkedUploadId) {
-          const upload = await recordsService.getRecordById(assessment.linkedUploadId);
+          const upload = isDemoId(assessment.linkedUploadId)
+            ? getDemoRecordById(assessment.linkedUploadId, { uid: assessment.uid })
+            : await recordsService.getRecordById(assessment.linkedUploadId);
           if (cancelled) return;
           setLinkedRecord(upload);
         } else {
@@ -64,10 +70,10 @@ export default function ResultDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [resultId]);
+  }, [resultId, user?.uid]);
 
   if (loading) {
-    return <div className="h-72 animate-pulse rounded-[28px] bg-white/70" />;
+    return <LoadingPanel className="h-72" lines={4} />;
   }
 
   if (!user) {
@@ -92,7 +98,7 @@ export default function ResultDetailPage() {
   }
 
   return (
-    <div>
+    <div className="page-fade-in">
       <Link href="/history" className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-gray-600">
         <ArrowLeft className="h-4 w-4" />
         Back to history
@@ -103,7 +109,6 @@ export default function ResultDetailPage() {
         title={`${result.assessmentType} assessment result`}
         description="Inspect the saved model response, contributing factors, linked records, and patient-friendly interpretation for this assessment."
       />
-
       <ResultDetailView result={result} linkedRecord={linkedRecord} userName={user.fullName} />
     </div>
   );

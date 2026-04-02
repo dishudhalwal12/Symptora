@@ -6,6 +6,7 @@ import { AdminTabs } from "@/components/admin/AdminTabs";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { RecoveryState } from "@/components/ui/recovery-state";
+import { getDemoHealth } from "@/lib/demo-data";
 import { adminService } from "@/services/admin.service";
 import { AdminStats } from "@/types";
 
@@ -14,24 +15,16 @@ export default function AdminSystemHealthPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    adminService.getSystemHealth().then(setHealth).catch((err) => {
+    adminService.getSystemHealth().then((payload) => {
+      setHealth(payload);
+    }).catch((err) => {
       setError(err instanceof Error ? err.message : "Unable to load system health.");
+      setHealth(getDemoHealth());
     });
   }, []);
 
-  if (error) {
-    return (
-      <RecoveryState
-        title="System health unavailable"
-        description={error}
-        actionLabel="Retry health checks"
-        onAction={() => window.location.reload()}
-      />
-    );
-  }
-
   return (
-    <div>
+    <div className="page-fade-in">
       <PageIntro
         eyebrow="Admin"
         title="System health"
@@ -39,6 +32,16 @@ export default function AdminSystemHealthPage() {
       />
       <AdminTabs />
 
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Live system health unavailable"
+            description={error}
+            actionLabel="Retry health checks"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <div className="grid gap-4 md:grid-cols-3">
         <HealthCard label="Firebase" value={health?.firebase || "offline"} />
         <HealthCard label="ML API" value={health?.mlApi || "offline"} />
