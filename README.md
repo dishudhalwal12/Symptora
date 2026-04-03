@@ -101,8 +101,8 @@ Use this if `git --version` works:
 
 ```powershell
 cd $HOME\Desktop
-git clone https://github.com/dishudhalwal12/symptora.git
-cd symptora
+git clone <repository-url>
+cd <project-folder>
 ```
 
 **Option B: Git is not available**
@@ -112,7 +112,7 @@ Use this if you do not want to install Git.
 2. Click `Code`
 3. Click `Download ZIP`
 4. Extract the ZIP
-5. Rename the extracted folder to `symptora` if needed
+5. Rename the extracted folder if needed
 6. Open PowerShell in that extracted folder
 
 **4. Open The Project In VS Code**
@@ -127,7 +127,7 @@ If that command does not work:
 - Open VS Code manually
 - Click `File`
 - Click `Open Folder`
-- Select the `symptora` folder
+- Select the extracted project folder
 
 **5. Environment Setup Is Already Handled**
 
@@ -255,8 +255,8 @@ http://localhost:3000
 
 ```powershell
 git --version
-git clone https://github.com/dishudhalwal12/symptora.git
-cd symptora
+git clone <repository-url>
+cd <project-folder>
 ```
 
 **If Git is missing**
@@ -304,8 +304,8 @@ Then:
 
 ```powershell
 cd $HOME\Desktop
-git clone https://github.com/dishudhalwal12/symptora.git
-cd symptora
+git clone <repository-url>
+cd <project-folder>
 npm install
 py -m pip install -r ml-api/requirements.txt
 py ml-api/scripts/train_all.py
