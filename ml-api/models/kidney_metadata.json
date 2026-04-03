@@ -29,7 +29,7 @@
         "f1_score": 0.9795918367346939
       }
     },
-    "trainedAt": "2026-03-28T11:49:47.861372+00:00"
+    "trainedAt": "2026-04-03T06:30:20.366040+00:00"
   },
   "schema": {
     "target_column": "classification",

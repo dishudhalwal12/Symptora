@@ -726,20 +726,5 @@ export function getDisplayProfile(user: AuthUser | null, profile: HealthProfile 
     return profile;
   }
 
-  if (!shouldUseDemoProfile(profile)) {
-    return mergeProfileWithDefaults(profile, { uid: user.uid, fullName: user.fullName });
-  }
-
-  return mergeProfileWithDefaults(
-    {
-      ...createDemoProfile({
-        uid: user.uid,
-        fullName: user.fullName,
-      }),
-      ...profile,
-      fullName: profile?.fullName || user.fullName,
-      uid: user.uid,
-    },
-    { uid: user.uid, fullName: user.fullName }
-  );
+  return mergeProfileWithDefaults(profile, { uid: user.uid, fullName: user.fullName });
 }

@@ -6,14 +6,12 @@ import { useRouter } from "next/navigation";
 import { Activity, AlertCircle, ArrowLeft } from "lucide-react";
 
 import { RecentAssessmentList } from "@/components/assessments/RecentAssessmentList";
+import { AssessmentNumberField as NumberField } from "@/components/assessments/AssessmentFields";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoAssessmentsByType } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, DiabetesAssessmentInput } from "@/types";
 
@@ -41,10 +39,20 @@ export default function DiabetesAssessmentPage() {
     if (!user) return;
 
     void (async () => {
-      const assessmentService = await getAssessmentService();
-      const records = await assessmentService.getRelatedAssessments(user.uid, "diabetes");
-      setHistory(records.length > 0 ? records : getDemoAssessmentsByType("diabetes", { uid: user.uid }));
-      setLoadingHistory(false);
+      try {
+        const assessmentService = await getAssessmentService();
+        const records = await assessmentService.getRelatedAssessments(user.uid, "diabetes");
+        setHistory(records);
+      } catch (historyError) {
+        setError(
+          historyError instanceof Error
+            ? historyError.message
+            : "Unable to load recent diabetes assessments."
+        );
+        setHistory([]);
+      } finally {
+        setLoadingHistory(false);
+      }
     })();
   }, [user]);
 
@@ -115,7 +123,7 @@ export default function DiabetesAssessmentPage() {
           </div>
 
           <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
               <NumberField label="Pregnancies" value={form.Pregnancies} onChange={(value) => updateField("Pregnancies", value)} />
               <NumberField label="Glucose" value={form.Glucose} onChange={(value) => updateField("Glucose", value)} />
               <NumberField
@@ -158,30 +166,6 @@ export default function DiabetesAssessmentPage() {
           <RecentAssessmentList title="Recent diabetes assessments" records={history} />
         )}
       </div>
-    </div>
-  );
-}
-
-function NumberField({
-  label,
-  value,
-  step,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  step?: string;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <div>
-      <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
-      <Input
-        type="number"
-        step={step}
-        value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
     </div>
   );
 }

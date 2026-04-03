@@ -6,14 +6,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { AlertCircle, ArrowLeft, ShieldCheck } from "lucide-react";
 
 import { RecentAssessmentList } from "@/components/assessments/RecentAssessmentList";
+import {
+  AssessmentNumberField as NumberField,
+  AssessmentSelectField as SelectField,
+} from "@/components/assessments/AssessmentFields";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoAssessmentsByType } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, KidneyAssessmentInput, LiverAssessmentInput } from "@/types";
 
@@ -87,7 +88,7 @@ export default function OrganAssessmentPage() {
     void getAssessmentService()
       .then((assessmentService) => assessmentService.getRelatedAssessments(user.uid, activeModule))
       .then((records) => {
-        setHistory(records.length > 0 ? records : getDemoAssessmentsByType(activeModule, { uid: user.uid }));
+        setHistory(records);
         setError(null);
       })
       .catch((historyError) => {
@@ -96,7 +97,7 @@ export default function OrganAssessmentPage() {
             ? historyError.message
             : `Unable to load recent ${activeModule} assessments.`
         );
-        setHistory(getDemoAssessmentsByType(activeModule, { uid: user.uid }));
+        setHistory([]);
       })
       .finally(() => {
         setLoadingHistory(false);
@@ -343,60 +344,7 @@ function FormSection({
         <h4 className="text-lg font-semibold text-gray-950">{title}</h4>
         <p className="mt-1 text-sm leading-7 text-gray-600">{description}</p>
       </div>
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{children}</div>
-    </div>
-  );
-}
-
-function NumberField({
-  label,
-  value,
-  step,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  step?: string;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <div>
-      <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
-      <Input
-        type="number"
-        step={step}
-        value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
-    </div>
-  );
-}
-
-function SelectField({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  options: Array<{ value: string; label: string }>;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div>
-      <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
-      <select
-        className="field-select"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className="grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-3">{children}</div>
     </div>
   );
 }

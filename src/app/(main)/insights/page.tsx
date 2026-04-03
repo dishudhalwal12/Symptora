@@ -8,9 +8,10 @@ import { PageIntro } from "@/components/layout/PageIntro";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { LoadingPanel } from "@/components/ui/loading-panel";
+import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoAssessments, getDemoInsight, getDisplayProfile } from "@/lib/demo-data";
+import { getDisplayProfile } from "@/lib/demo-data";
 import { buildInsightSummary } from "@/lib/scoring";
 import { getAssessmentService, getInsightsService } from "@/services/loaders";
 import { AssessmentRecord, InsightSummary } from "@/types";
@@ -20,12 +21,12 @@ export default function InsightsPage() {
   const [summary, setSummary] = useState<InsightSummary | null>(null);
   const [history, setHistory] = useState<AssessmentRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
     const userId = user.uid;
     const currentProfile = getDisplayProfile(user, profile);
-    const demoSeed = { uid: userId, fullName: currentProfile?.fullName || user.fullName };
 
     let cancelled = false;
 
@@ -48,14 +49,15 @@ export default function InsightsPage() {
 
         if (cancelled) return;
 
-        const shouldUseDemo = records.length === 0;
-        setHistory(records.length > 0 ? records : getDemoAssessments(demoSeed));
-        setSummary(shouldUseDemo ? getDemoInsight(demoSeed) : insight);
+        setHistory(records);
+        setSummary(insight);
+        setError(null);
       } catch (error) {
         console.error("Failed to load insights", error);
         if (cancelled) return;
-        setHistory(getDemoAssessments(demoSeed));
-        setSummary(getDemoInsight(demoSeed));
+        setHistory([]);
+        setSummary(buildInsightSummary(userId, currentProfile, []));
+        setError(error instanceof Error ? error.message : "Unable to load saved insights right now.");
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -101,6 +103,16 @@ export default function InsightsPage() {
         title="See the pattern behind your saved assessment activity"
         description="These insights combine profile readiness, lifestyle scoring, and recent assessment probabilities to surface movement over time."
       />
+      {error ? (
+        <div className="mb-4">
+          <RecoveryState
+            title="Insights sync is currently degraded"
+            description={error}
+            actionLabel="Retry insights"
+            onAction={() => window.location.reload()}
+          />
+        </div>
+      ) : null}
       <div className="grid gap-4 lg:grid-cols-[1.02fr_0.98fr]">
         <Card className="ink-panel border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-white/55">Signal overview</p>
@@ -181,17 +193,23 @@ export default function InsightsPage() {
         <Card className="shell-card border-0 p-6">
           <p className="text-xs uppercase tracking-[0.28em] text-gray-400">Recent modules</p>
           <div className="mt-5 space-y-3">
-            {history.slice(0, 5).map((record, index) => (
-              <div key={record.id} className={`rounded-[22px] p-4 ${index % 2 === 0 ? "mesh-panel" : "bubble-card"}`}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-semibold capitalize text-gray-950">{record.assessmentType}</p>
-                    <p className="mt-1 text-sm text-gray-500">{record.predictionLabel}</p>
+            {history.length > 0 ? (
+              history.slice(0, 5).map((record, index) => (
+                <div key={record.id} className={`rounded-[22px] p-4 ${index % 2 === 0 ? "mesh-panel" : "bubble-card"}`}>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold capitalize text-gray-950">{record.assessmentType}</p>
+                      <p className="mt-1 text-sm text-gray-500">{record.predictionLabel}</p>
+                    </div>
+                    <StatusPill level={record.riskLevel} />
                   </div>
-                  <StatusPill level={record.riskLevel} />
                 </div>
+              ))
+            ) : (
+              <div className="rounded-[22px] bg-[#f7f4ef] px-4 py-6 text-sm leading-7 text-gray-600">
+                Save an assessment to start seeing recent module activity here.
               </div>
-            ))}
+            )}
           </div>
         </Card>
       </div>

@@ -15,7 +15,7 @@ import { StatusPill } from "@/components/ui/status-pill";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { BLOOD_GROUP_OPTIONS, GENDER_OPTIONS } from "@/lib/assessment-options";
-import { getDisplayProfile, shouldUseDemoProfile } from "@/lib/demo-data";
+import { getDisplayProfile } from "@/lib/demo-data";
 import { getProfileCompletion, mergeProfileWithDefaults } from "@/lib/profile";
 import { getProfileService } from "@/services/loaders";
 import { HealthProfile } from "@/types";

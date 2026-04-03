@@ -20,7 +20,7 @@ import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoAssessments, getDemoInsight, getDemoRecords, getDisplayProfile } from "@/lib/demo-data";
+import { getDisplayProfile } from "@/lib/demo-data";
 import { buildInsightSummary } from "@/lib/scoring";
 import { getAssessmentService, getInsightsService, getRecordsService } from "@/services/loaders";
 import { AssessmentRecord, InsightSummary, RiskLevel, UploadRecord } from "@/types";
@@ -56,7 +56,6 @@ export default function DashboardPage() {
 
     const currentUser = user;
     const currentProfile = getDisplayProfile(user, profile);
-    const demoSeed = { uid: currentUser.uid, fullName: currentProfile?.fullName || currentUser.fullName };
     let cancelled = false;
 
     async function loadDashboard() {
@@ -73,8 +72,6 @@ export default function DashboardPage() {
           assessmentService.getHistory(currentUser.uid),
           recordsService.getRecords(currentUser.uid),
         ]);
-        const demoAssessments = getDemoAssessments(demoSeed);
-        const demoRecords = getDemoRecords(demoSeed);
 
         if (cancelled) {
           return;
@@ -94,9 +91,9 @@ export default function DashboardPage() {
           return;
         }
 
-        setAssessments(history.length > 0 ? history : demoAssessments);
-        setRecords(uploadRecords.length > 0 ? uploadRecords : demoRecords);
-        setInsight(history.length > 0 ? summary : getDemoInsight(demoSeed));
+        setAssessments(history);
+        setRecords(uploadRecords);
+        setInsight(summary);
       } catch (error) {
         if (cancelled) {
           return;
@@ -105,9 +102,9 @@ export default function DashboardPage() {
         setDashboardError(
           error instanceof Error ? error.message : "We could not load your saved dashboard data right now."
         );
-        setInsight(getDemoInsight(demoSeed));
-        setAssessments(getDemoAssessments(demoSeed));
-        setRecords(getDemoRecords(demoSeed));
+        setInsight(buildInsightSummary(currentUser.uid, currentProfile, []));
+        setAssessments([]);
+        setRecords([]);
       } finally {
         if (!cancelled) {
           setLoading(false);

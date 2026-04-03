@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { AlertCircle, ArrowLeft, HeartPulse } from "lucide-react";
 
 import { RecentAssessmentList } from "@/components/assessments/RecentAssessmentList";
+import {
+  AssessmentNumberField as NumberField,
+  AssessmentSelectField as SelectField,
+} from "@/components/assessments/AssessmentFields";
 import { PageIntro } from "@/components/layout/PageIntro";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   HEART_CHEST_PAIN_OPTIONS,
   HEART_REST_ECG_OPTIONS,
@@ -19,7 +21,6 @@ import {
   HEART_THAL_OPTIONS,
 } from "@/lib/assessment-options";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoAssessmentsByType } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, HeartAssessmentInput } from "@/types";
 
@@ -52,10 +53,20 @@ export default function HeartAssessmentPage() {
     if (!user) return;
 
     void (async () => {
-      const assessmentService = await getAssessmentService();
-      const records = await assessmentService.getRelatedAssessments(user.uid, "heart");
-      setHistory(records.length > 0 ? records : getDemoAssessmentsByType("heart", { uid: user.uid }));
-      setLoadingHistory(false);
+      try {
+        const assessmentService = await getAssessmentService();
+        const records = await assessmentService.getRelatedAssessments(user.uid, "heart");
+        setHistory(records);
+      } catch (historyError) {
+        setError(
+          historyError instanceof Error
+            ? historyError.message
+            : "Unable to load recent heart assessments."
+        );
+        setHistory([]);
+      } finally {
+        setLoadingHistory(false);
+      }
     })();
   }, [user]);
 
@@ -122,7 +133,7 @@ export default function HeartAssessmentPage() {
           </div>
 
           <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
-            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid auto-rows-fr gap-5 md:grid-cols-2 xl:grid-cols-4">
               <NumberField label="Age" value={form.age} onChange={(value) => updateForm("age", value)} />
               <SelectField
                 label="Sex"
@@ -219,59 +230,6 @@ export default function HeartAssessmentPage() {
           <RecentAssessmentList title="Recent cardiovascular assessments" records={history} />
         )}
       </div>
-    </div>
-  );
-}
-
-function NumberField({
-  label,
-  value,
-  step,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  step?: string;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <div>
-      <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
-      <Input
-        type="number"
-        step={step}
-        value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
-      />
-    </div>
-  );
-}
-
-function SelectField({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  options: Array<{ value: string; label: string }>;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div>
-      <Label className="mb-2 block text-sm font-medium text-gray-700">{label}</Label>
-      <select
-        className="field-select"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
     </div>
   );
 }

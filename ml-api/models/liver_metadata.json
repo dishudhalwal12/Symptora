@@ -29,7 +29,7 @@
         "f1_score": 0.83
       }
     },
-    "trainedAt": "2026-03-28T11:49:48.677095+00:00"
+    "trainedAt": "2026-04-03T06:30:20.784797+00:00"
   },
   "schema": {
     "target_column": "Dataset",

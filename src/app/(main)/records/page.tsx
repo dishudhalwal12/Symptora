@@ -15,7 +15,6 @@ import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoRecords } from "@/lib/demo-data";
 import type { UploadCategory, UploadRecord } from "@/types";
 
 const CATEGORY_OPTIONS: Array<{ value: UploadCategory; label: string }> = [
@@ -53,12 +52,12 @@ export default function RecordsPage() {
     try {
       const service = await getRecordsService();
       const nextRecords = await service.getRecords(user.uid);
-      setRecords(nextRecords.length > 0 ? nextRecords : getDemoRecords({ uid: user.uid }));
+      setRecords(nextRecords);
       setError(null);
     } catch (loadError) {
       console.error("Failed to load records", loadError);
       setError(loadError instanceof Error ? loadError.message : "Unable to load records.");
-      setRecords(getDemoRecords({ uid: user.uid }));
+      setRecords([]);
     } finally {
       setLoading(false);
     }

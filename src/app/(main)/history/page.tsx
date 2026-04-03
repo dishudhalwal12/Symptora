@@ -12,7 +12,6 @@ import { LoadingPanel } from "@/components/ui/loading-panel";
 import { RecoveryState } from "@/components/ui/recovery-state";
 import { StatusPill } from "@/components/ui/status-pill";
 import { useAuth } from "@/hooks/useAuth";
-import { getDemoAssessments } from "@/lib/demo-data";
 import { getAssessmentService } from "@/services/loaders";
 import { AssessmentRecord, AssessmentType } from "@/types";
 
@@ -37,12 +36,12 @@ export default function HistoryPage() {
         const assessmentService = await getAssessmentService();
         const records = await assessmentService.getHistory(userId);
         if (cancelled) return;
-        setHistory(records.length > 0 ? records : getDemoAssessments({ uid: userId }));
+        setHistory(records);
         setError(null);
       } catch (error) {
         console.error("Failed to load assessment history", error);
         if (cancelled) return;
-        setHistory(getDemoAssessments({ uid: userId }));
+        setHistory([]);
         setError(error instanceof Error ? error.message : "Unable to load assessment history.");
       } finally {
         if (!cancelled) {

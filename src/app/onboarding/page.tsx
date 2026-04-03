@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { BLOOD_GROUP_OPTIONS, GENDER_OPTIONS } from "@/lib/assessment-options";
-import { getDisplayProfile, shouldUseDemoProfile } from "@/lib/demo-data";
+import { getDisplayProfile } from "@/lib/demo-data";
 import {
   ONBOARDING_STEPS,
   getOnboardingProgress,
